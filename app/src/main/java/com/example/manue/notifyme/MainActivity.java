@@ -1,7 +1,6 @@
 package com.example.manue.notifyme;
 
 import android.arch.persistence.room.Room;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -29,7 +28,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_action_bar);
 
         setupUI();
         initListeners();

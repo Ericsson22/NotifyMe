@@ -36,7 +36,7 @@ public class AddActivity extends AppCompatActivity{
         titleInput = findViewById(R.id.input_title);
         descriptionInput = findViewById(R.id.description);
 
-        reminderSpinner = findViewById(R.id.spinner_remember);
+        reminderSpinner = findViewById(R.id.spinner_reminder);
         initSpinner(reminderSpinner,R.array.reminder_array);
     }
 
