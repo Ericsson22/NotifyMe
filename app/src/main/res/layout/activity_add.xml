@@ -6,78 +6,74 @@
     android:padding="16dp">
 
     <TextView
+        android:id="@+id/headline_add_activity"
         android:layout_alignParentTop="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/headline_add_activity"
         android:text="@string/headline_add"
         android:textAlignment="center"
-        android:textSize="20dp"
-        android:textStyle="bold"
-        />
+        android:textSize="20sp"
+        android:textStyle="bold" />
 
-        <EditText
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:id="@+id/input_title"
-            android:hint="@string/edit_hint"
-            android:singleLine="true"
-            android:layout_below="@+id/headline_add_activity"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true" />
-
-        <EditText
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:id="@+id/input_short_text"
-            android:layout_below="@+id/input_title"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:hint="@string/short_Description_hint"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true" />
-
-    <TextView
+    <EditText
+        android:id="@+id/input_title"
+        android:layout_below="@id/headline_add_activity"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/headline_Spinner_Remember"
-        android:layout_below="@+id/input_short_text"
+        android:ems="10"
+        android:hint="@string/edit_hint"
+        android:singleLine="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+    <EditText
+        android:id="@+id/description"
+        android:layout_below="@id/input_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:hint="@string/short_description_hint"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+    <TextView
+        android:id="@+id/headline_spinner_reminder"
+        android:layout_below="@id/description"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_marginTop="10dp"
         android:text="@string/notification"
         android:textStyle="bold"
         android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+    <Spinner
+        android:id="@+id/spinner_reminder"
+        android:layout_below="@id/headline_spinner_reminder"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
+        android:ems="10" />
 
-        />
-
-         <Spinner
-             android:id="@+id/spinner_remember"
-             android:layout_width="match_parent"
-             android:layout_height="wrap_content"
-             android:layout_below="@id/headline_Spinner_Remember"
-             android:layout_alignParentLeft="true"
-             android:layout_alignParentStart="true"
-             android:layout_alignParentRight="true"
-             android:layout_alignParentEnd="true"
-             android:ems="10"
-             />
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/add"
-            android:id="@+id/button_to_add"
-            android:layout_below="@+id/spinner_remember"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true" />
+    <Button
+        android:id="@+id/save_button"
+        android:layout_below="@id/spinner_reminder"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/add"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
 
     </RelativeLayout>
 
