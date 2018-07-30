@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 
 public class AddActivity extends AppCompatActivity{
@@ -56,8 +57,10 @@ public class AddActivity extends AppCompatActivity{
             @Override //hier kommt die weiterverarbeitung der versch. Werte rein
             public void onItemSelected(AdapterView<?> adapterView, View v,
                                        int position, long arg3) {
-
-
+                //dieser Toast wird aufgerufen, sobald man über den floating + button auf die AddActivity kommt?!
+                //Und wenn man im Spinner etwas anklickt
+                Toast toast = Toast.makeText(getApplicationContext(), "Hallo, 123 check", Toast.LENGTH_SHORT);
+                toast.show();
             }
 
             @Override
