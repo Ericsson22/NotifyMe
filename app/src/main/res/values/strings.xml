@@ -11,7 +11,7 @@
     <string name="edit_hint">Titel der Erinnerung</string>
     <string name="short_Description_hint">Kurzbeschreibung</string>
     <string name="add">Hinzufügen</string>
-    <string name="notification">Hinweis</string>
+    <string name="notification">Erinnerung</string>
 
     <string-array name="remember_array">
         <item>nein</item>

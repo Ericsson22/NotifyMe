@@ -84,9 +84,9 @@ public class MainActivity extends AppCompatActivity
     @Override //das is für die Navigationsseite Links an der Seite
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         // Handle navigation view item clicks here.
-        int id = item.getItemId();
 
-        switch (id){
+
+        switch (item.getItemId()){
             case R.id.nav_settings:
                 Intent toSettingsIntent = new Intent(MainActivity.this, SettingsActivity.class); //Angabe von derzeitiger Seite und Zielseite
                 startActivity(toSettingsIntent);
