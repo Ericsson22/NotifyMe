@@ -90,12 +90,12 @@ public class MainActivity extends AppCompatActivity
             case R.id.nav_settings:
                 Intent toSettingsIntent = new Intent(MainActivity.this, SettingsActivity.class); //Angabe von derzeitiger Seite und Zielseite
                 startActivity(toSettingsIntent);
-                return true;
+                break;
 
             case R.id.solved_tasks:
                 Intent toSolvedTasksIntent = new Intent(MainActivity.this, SolvedTasksActivity.class); //Angabe von derzeitiger Seite und Zielseite
                 startActivity(toSolvedTasksIntent);
-                return true;
+                break;
 
             case R.id.nav_slideshow:
                 break;
