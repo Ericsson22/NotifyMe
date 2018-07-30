@@ -53,7 +53,7 @@ public class AddActivity extends AppCompatActivity{
         // Benötigten Listener Implementieren und die Methoden überschreiben
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
-            @Override
+            @Override //hier kommt die weiterverarbeitung der versch. Werte rein
             public void onItemSelected(AdapterView<?> adapterView, View v,
                                        int position, long arg3) {
 

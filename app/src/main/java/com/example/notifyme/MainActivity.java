@@ -63,7 +63,7 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
-    @Override
+    /*@Override
     //Das ist für die Actionbar an sich, also den noch vorhandenen Add Button und das drei Punkte Menü
     public boolean onOptionsItemSelected(MenuItem item) {
 
@@ -77,7 +77,7 @@ public class MainActivity extends AppCompatActivity
         }
 
         return super.onOptionsItemSelected(item);
-    }
+    }*/
 
 
     @SuppressWarnings("StatementWithEmptyBody") //kann weg wenn alle if´s ausgefüllt sind
