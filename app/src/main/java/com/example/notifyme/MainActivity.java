@@ -79,7 +79,6 @@ public class MainActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
-
     @SuppressWarnings("StatementWithEmptyBody") //kann weg wenn alle if´s ausgefüllt sind
     @Override //das is für die Navigationsseite Links an der Seite
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -112,7 +111,6 @@ public class MainActivity extends AppCompatActivity
             default:
                 break;
         }
-
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
