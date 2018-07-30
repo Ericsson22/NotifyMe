@@ -7,6 +7,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -14,6 +15,7 @@ import android.widget.Toast;
 public class AddActivity extends AppCompatActivity{
 
     private Spinner spinnerRemeberTime;
+    private Button addButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +41,15 @@ public class AddActivity extends AppCompatActivity{
     private void setupUI(){
         spinnerRemeberTime = findViewById(R.id.spinner_remember);
         initSpinner(spinnerRemeberTime,R.array.remember_array);
+
+        addButton = findViewById(R.id.button_to_add);
+        addButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast toast = Toast.makeText(getApplicationContext(), "Durch diesen Klick sollten die Werte als neues Task Objekt gespeichert und dann in die Datenbank übertragen werden", Toast.LENGTH_SHORT);
+                toast.show();
+            }
+        });
     }
 
     private void initSpinner(Spinner spinner, int arrayID) {
