@@ -3,6 +3,7 @@ package com.example.notifyme;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -22,7 +23,6 @@ public class AddActivity extends AppCompatActivity{
 
         setupUI();
     }
-
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -49,15 +49,11 @@ public class AddActivity extends AppCompatActivity{
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
 
-
-        // Benötigten Listener Implementieren und die Methoden überschreiben
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
-            @Override
+            @Override //hier kommt die weiterverarbeitung der versch. Werte rein
             public void onItemSelected(AdapterView<?> adapterView, View v,
                                        int position, long arg3) {
-
-
             }
 
             @Override

@@ -63,7 +63,7 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
-    @Override
+/*    @Override
     //Das ist für die Actionbar an sich, also den noch vorhandenen Add Button und das drei Punkte Menü
     public boolean onOptionsItemSelected(MenuItem item) {
 
@@ -77,15 +77,14 @@ public class MainActivity extends AppCompatActivity
         }
 
         return super.onOptionsItemSelected(item);
-    }
+    }*/
 
     @SuppressWarnings("StatementWithEmptyBody") //kann weg wenn alle if´s ausgefüllt sind
     @Override //das is für die Navigationsseite Links an der Seite
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         // Handle navigation view item clicks here.
-        int id = item.getItemId();
 
-        switch (id){
+        switch (item.getItemId()){
             case R.id.nav_settings:
                 Intent toSettingsIntent = new Intent(MainActivity.this, SettingsActivity.class); //Angabe von derzeitiger Seite und Zielseite
                 startActivity(toSettingsIntent);
