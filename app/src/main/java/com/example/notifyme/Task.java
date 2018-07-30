@@ -29,7 +29,7 @@ public class Task {
         this.taskId = taskId;
         this.taskTitle = taskTitle;
         this.taskDescription = taskDescription;
-        this. reminderId = reminderId;
+        this.reminderId = reminderId;
         this.taskFinished = taskFinished;
         this.priority = priority;
         this.solved = solved;
