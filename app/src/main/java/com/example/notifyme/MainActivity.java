@@ -1,7 +1,8 @@
-package com.example.manue.notifyme;
+package com.example.notifyme;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -12,6 +13,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import com.example.notifyme.AddActivity;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -27,8 +30,8 @@ public class MainActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent toAddIntent = new Intent(MainActivity.this, AddActivity.class);
-                startActivity(toAddIntent);
+                Intent AddIntent = new Intent(MainActivity.this, AddActivity.class);
+                startActivity(AddIntent);
             }
         });
 
@@ -60,14 +63,15 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
-    @Override //Das ist für die Actionbar an sich, also den noch vorhandenen Add Button und das drei Punkte Menü
+    @Override
+    //Das ist für die Actionbar an sich, also den noch vorhandenen Add Button und das drei Punkte Menü
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        switch(item.getItemId()){
+        switch (item.getItemId()) {
 
             case R.id.add_button: {
-                Intent toAddIntent = new Intent(MainActivity.this, AddActivity.class);
-                startActivity(toAddIntent);
+                Intent AddIntent = new Intent(MainActivity.this, AddActivity.class);
+                startActivity(AddIntent);
                 return true;
             }
         }
@@ -76,30 +80,39 @@ public class MainActivity extends AppCompatActivity
     }
 
 
-
     @SuppressWarnings("StatementWithEmptyBody") //kann weg wenn alle if´s ausgefüllt sind
-    @Override //das is für die Navigationsseite Links an der Seite, vlt. noch mit ner SwitchCase
-    public boolean onNavigationItemSelected(MenuItem item) {
+    @Override //das is für die Navigationsseite Links an der Seite
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_settings) {
-            Intent toSettingsIntent = new Intent(MainActivity.this, SettingsActivity.class); //Angabe von derzeitiger Seite und Zielseite
-            startActivity(toSettingsIntent);
-            return true;
-        } else if (id == R.id.solved_tasks) {
-            Intent toSolvedTasksIntent = new Intent(MainActivity.this, SolvedTasksActivity.class); //Angabe von derzeitiger Seite und Zielseite
-            startActivity(toSolvedTasksIntent);
-            return true;
-        } else if (id == R.id.nav_slideshow) {
+        switch (id){
+            case R.id.nav_settings:
+                Intent toSettingsIntent = new Intent(MainActivity.this, SettingsActivity.class); //Angabe von derzeitiger Seite und Zielseite
+                startActivity(toSettingsIntent);
+                return true;
 
-        } else if (id == R.id.nav_manage) {
+            case R.id.solved_tasks:
+                Intent toSolvedTasksIntent = new Intent(MainActivity.this, SolvedTasksActivity.class); //Angabe von derzeitiger Seite und Zielseite
+                startActivity(toSolvedTasksIntent);
+                return true;
 
-        } else if (id == R.id.nav_share) {
+            case R.id.nav_slideshow:
+                break;
 
-        } else if (id == R.id.nav_send) {
+            case R.id.nav_manage:
+                break;
 
+            case R.id.nav_share:
+                break;
+
+            case R.id.nav_send:
+                break;
+
+            default:
+                break;
         }
+
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);

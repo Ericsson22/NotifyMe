@@ -1,4 +1,4 @@
-package com.example.manue.notifyme;
+package com.example.notifyme;
 
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
+
 
 public class AddActivity extends AppCompatActivity{
 
@@ -35,12 +36,11 @@ public class AddActivity extends AppCompatActivity{
     }
 
     private void setupUI(){
-        spinnerRemeberTime = (Spinner) findViewById(R.id.spinner_remember);
+        spinnerRemeberTime = findViewById(R.id.spinner_remember);
         initSpinner(spinnerRemeberTime,R.array.remember_array);
     }
 
     private void initSpinner(Spinner spinner, int arrayID) {
-
         // Adaptersetup
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
                 AddActivity.this, arrayID,
@@ -48,6 +48,7 @@ public class AddActivity extends AppCompatActivity{
 
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
+
 
         // Benötigten Listener Implementieren und die Methoden überschreiben
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {

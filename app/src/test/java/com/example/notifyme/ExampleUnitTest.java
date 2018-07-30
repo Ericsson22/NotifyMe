@@ -1,4 +1,4 @@
-package com.example.manue.notifyme;
+package com.example.notifyme;
 
 import org.junit.Test;
 

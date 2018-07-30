@@ -1,4 +1,4 @@
-package com.example.manue.notifyme;
+package com.example.notifyme;
 
 import android.arch.persistence.room.Database;
 import android.arch.persistence.room.RoomDatabase;

@@ -1,7 +1,8 @@
-package com.example.manue.notifyme;
+package com.example.notifyme;
 
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Insert;
+
 
 @Dao
 public interface DaoAccess {

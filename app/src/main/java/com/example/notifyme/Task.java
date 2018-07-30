@@ -1,4 +1,4 @@
-package com.example.manue.notifyme;
+package com.example.notifyme;
 
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;

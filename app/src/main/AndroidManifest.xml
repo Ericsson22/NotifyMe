@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.manue.notifyme">
+    package="com.example.notifyme">
 
     <application
         android:allowBackup="true"
@@ -22,17 +22,17 @@
         <activity android:name=".AddActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.manue.notifyme.MainActivity" />
+                android:value="com.example.notifyme.MainActivity" />
         </activity>
         <activity android:name=".SettingsActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.manue.notifyme.MainActivity" />
+                android:value="com.example.notifyme.MainActivity" />
         </activity>
         <activity android:name=".SolvedTasksActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.manue.notifyme.MainActivity" />
+                android:value="com.example.notifyme.MainActivity" />
         </activity>
     </application>
 
