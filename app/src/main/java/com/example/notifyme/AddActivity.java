@@ -46,7 +46,9 @@ public class AddActivity extends AppCompatActivity{
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast toast = Toast.makeText(getApplicationContext(), "Durch diesen Klick sollten die Werte als neues Task Objekt gespeichert und dann in die Datenbank übertragen werden", Toast.LENGTH_SHORT);
+                Toast toast = Toast.makeText(getApplicationContext(),
+                "Durch diesen Klick sollten die Werte als neues Task Objekt gespeichert und in die Datenbank übertragen werden",
+                        Toast.LENGTH_SHORT);
                 toast.show();
             }
         });
@@ -70,7 +72,8 @@ public class AddActivity extends AppCompatActivity{
                                        int position, long arg3) {
                 //dieser Toast wird aufgerufen, sobald man über den floating + button auf die AddActivity kommt?!
                 //Und wenn man im Spinner etwas anklickt
-                Toast toast = Toast.makeText(getApplicationContext(), "Hallo, 123 check", Toast.LENGTH_SHORT);
+                Toast toast = Toast.makeText(getApplicationContext(),
+                        "Hallo, 123 check, leider sag ich schon hallo, wenn du die Activity öffnest", Toast.LENGTH_SHORT);
                 toast.show();
             }
 
