@@ -70,7 +70,14 @@ public class Task {
         this.solved = solved;
     }
 
-    //müssen wir bei den getter Methoden etwas übergeben? wenn ja, was? title?
+    @NonNull
+    public int getTaskId() {
+        return taskId;
+    }
+
+    public boolean isSolved() {
+        return solved;
+    }
 
     public String getTaskTitle(){
         return taskTitle;
@@ -94,6 +101,14 @@ public class Task {
 
     public boolean getTaskState(){
         return solved;
+    }
+
+    public void setDueDate(Date dueDate) {
+        this.dueDate = dueDate;
+    }
+
+    public void setSolved(boolean solved) {
+        this.solved = solved;
     }
 
 /*public Task(int taskId, String taskTitle, String taskDescription, int reminderId, Date taskFinished, int priority, boolean solved){

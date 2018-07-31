@@ -14,16 +14,19 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
+
 import java.util.Date;
+
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.widget.DatePicker;
 import android.widget.TimePicker;
+
 import java.util.Calendar;
 
 
-public class AddActivity extends AppCompatActivity{
+public class AddActivity extends AppCompatActivity {
 
     private Spinner reminderSpinner;
     private Button saveButton, datePickerButton, timePickerButton;
@@ -50,24 +53,24 @@ public class AddActivity extends AppCompatActivity{
         initListener();
     }
 
-    private void setupUI(){
+    private void setupUI() {
         saveButton = findViewById(R.id.save_button);
         titleInput = findViewById(R.id.input_title);
         descriptionInput = findViewById(R.id.input_description);
 
         reminderSpinner = findViewById(R.id.spinner_reminder);
-        initSpinner(reminderSpinner,R.array.reminder_array);
+        initSpinner(reminderSpinner, R.array.reminder_array);
 
         showDatePicker();
         showTimePicker();
     }
 
-    private void initDB(){
-        taskDatabase = Room.databaseBuilder(getApplicationContext(),TaskDatabase.class,
+    private void initDB() {
+        taskDatabase = Room.databaseBuilder(getApplicationContext(), TaskDatabase.class,
                 Constants.DATABASE_NAME).fallbackToDestructiveMigration().build();
     }
 
-    private void initListener(){
+    private void initListener() {
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -77,13 +80,13 @@ public class AddActivity extends AppCompatActivity{
         });
     }
 
-    private void saveNewEntry(){
+    private void saveNewEntry() {
         final String title = titleInput.getText().toString();
         final String description = descriptionInput.getText().toString();
 
         //TODO: change later!
         final int reminderId = 0;
-        final Date taskFinished = new Date(2018, 7,30);
+        final Date taskFinished = new Date(2018, 7, 30);
         final int priority = 1;
         final boolean solved = true;
 
@@ -102,7 +105,7 @@ public class AddActivity extends AppCompatActivity{
                 taskDatabase.daoAccess().insertTask(newTask);
 
                 //when finished saving, change back to main activity
-                Intent intent = new Intent(AddActivity.this,MainActivity.class);
+                Intent intent = new Intent(AddActivity.this, MainActivity.class);
                 startActivity(intent);
 
                 //TODO: notifyDataSetChanged when an adapter is initialised
@@ -166,12 +169,14 @@ public class AddActivity extends AppCompatActivity{
                     }
                 });
     }
+
     private void getCurrentDate() {
         final Calendar calendar = Calendar.getInstance();
         datePickerYear = calendar.get(Calendar.YEAR);
         datePickerMonth = calendar.get(Calendar.MONTH);
         datePickerDay = calendar.get(Calendar.DAY_OF_MONTH);
     }
+
     protected DatePickerDialog.OnDateSetListener datePickerListner = new DatePickerDialog.OnDateSetListener() {
         @SuppressLint("SetTextI18n")
         @Override
@@ -183,6 +188,7 @@ public class AddActivity extends AppCompatActivity{
             datePickerButton.setText(datePickerDay + "/" + datePickerMonth + "/" + datePickerYear);
         }
     };
+
     //timePicker Dialog youtube for Beginner
     protected TimePickerDialog.OnTimeSetListener timePickerListener = new TimePickerDialog.OnTimeSetListener() {
         @SuppressLint("SetTextI18n")
@@ -193,7 +199,8 @@ public class AddActivity extends AppCompatActivity{
             timePickerButton.setText(timePickerHour + ":" + timePickerMinute + "Uhr");
         }
     };
-    public void showTimePicker () {
+
+    public void showTimePicker() {
         timePickerButton = findViewById(R.id.button_time_picker);
         timePickerButton.setOnClickListener(
                 new View.OnClickListener() {
