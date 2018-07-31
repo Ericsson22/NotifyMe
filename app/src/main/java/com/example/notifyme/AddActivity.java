@@ -179,14 +179,6 @@ public class AddActivity extends AppCompatActivity {
         };
 
         //timePicker Dialog youtube for Beginner
-    /*@Override
-    protected Dialog onCreateDialog(int idt){
-      if(idt==DIALOG_ID_TIME) {
-          return new TimePickerDialog(AddActivity.this, timePickerListener, hour_x, minute_x,false);
-      }else{
-          return null;
-    }*/
-
         protected TimePickerDialog.OnTimeSetListener timePickerListener = new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
@@ -210,4 +202,3 @@ public class AddActivity extends AppCompatActivity {
 
     }
 
-}
