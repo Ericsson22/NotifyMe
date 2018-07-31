@@ -1,6 +1,6 @@
 package com.example.notifyme;
 
-import android.app.ActionBar;
+
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
@@ -45,10 +45,6 @@ public class AddActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         getCurrentDate();
-        showDialogOnDateButtonClicked();
-
-
-        showTimePickerDialog();
 
         setupUI();
     }
@@ -74,6 +70,9 @@ public class AddActivity extends AppCompatActivity {
 
         addButton = (Button) findViewById(R.id.button_to_add);
         initButton();
+
+        showDatePicker();
+        showTimePickerDialog();
     }
 
     private void initSpinner(Spinner spinner, int arrayID) {
@@ -132,7 +131,7 @@ public class AddActivity extends AppCompatActivity {
     }
 
     //Youtube Android for Beginners 27
-    public void showDialogOnDateButtonClicked() {
+    public void showDatePicker() {
         datePickerButton = (Button) findViewById(R.id.button_date_picker);
         datePickerButton.setOnClickListener(
                 new View.OnClickListener() {
@@ -151,22 +150,6 @@ public class AddActivity extends AppCompatActivity {
         day_x = calendar.get(Calendar.DAY_OF_MONTH);
     }
 
-    @Override
-    protected Dialog onCreateDialog(int id) {
-        switch (id) {
-            case DIALOG_ID_TIME: {
-                return new TimePickerDialog(this, timePickerListener, hour_x, minute_x, false);
-            }
-            case DIALOG_ID_DATE: {
-                return new DatePickerDialog(this, datePickerListner, year_x, month_x, day_x);
-
-
-            }
-
-            }
-        return null;
-        }
-
         protected DatePickerDialog.OnDateSetListener datePickerListner = new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
@@ -184,7 +167,7 @@ public class AddActivity extends AppCompatActivity {
             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                 hour_x = hourOfDay;
                 minute_x = minute;
-                timePickerButton.setText(hour_x + ":" + minute_x);
+                timePickerButton.setText(hour_x + ":" + minute_x + "Uhr");
             }
         };
 
@@ -200,5 +183,20 @@ public class AddActivity extends AppCompatActivity {
             );
         }
 
+
+        //Gemeinsames Abrufen von TimePickern und DatePickern
+        @Override
+    protected Dialog onCreateDialog(int id) {
+        switch (id) {
+            case DIALOG_ID_TIME: {
+                return new TimePickerDialog(this, timePickerListener, hour_x, minute_x, false);
+            }
+            case DIALOG_ID_DATE: {
+                return new DatePickerDialog(this, datePickerListner, year_x, month_x, day_x);
+            }
+        }
+        return null;
     }
+    }
+
 
