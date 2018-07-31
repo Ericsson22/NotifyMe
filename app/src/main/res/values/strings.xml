@@ -12,6 +12,8 @@
     <string name="description_hint">Kurzbeschreibung</string>
     <string name="add">Hinzufügen</string>
     <string name="notification">Erinnerung</string>
+    <string name="date_picker_text">Datum</string>
+    <string name="time_picker_text">Zeit</string>
 
     <string-array name="reminder_array">
         <item>nein</item>

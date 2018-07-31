@@ -1,5 +1,6 @@
 package com.example.notifyme;
 
+import android.annotation.SuppressLint;
 import android.arch.persistence.room.Room;
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,14 +15,26 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 import java.util.Date;
+import android.app.DatePickerDialog;
+import android.app.Dialog;
+import android.app.TimePickerDialog;
+import android.widget.DatePicker;
+import android.widget.TimePicker;
+import java.util.Calendar;
 
 
 public class AddActivity extends AppCompatActivity{
 
     private Spinner reminderSpinner;
-    private Button saveButton;
+    private Button saveButton, datePickerButton, timePickerButton;
     private EditText titleInput, descriptionInput;
     private TaskDatabase taskDatabase;
+
+    private int datePickerYear, datePickerMonth, datePickerDay;
+    private int timePickerHour, timePickerMinute;
+
+    static final int DIALOG_ID_DATE = 0;
+    static final int DIALOG_ID_TIME = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,7 +42,7 @@ public class AddActivity extends AppCompatActivity{
         setContentView(R.layout.activity_add);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-
+        getCurrentDate();
         setupUI();
         //TODO: find mistake, stop app from crashing as soon as clicked on the floating add button
         //when both methods are commented, app doesn't crash --> mistake must be with database
@@ -44,6 +57,9 @@ public class AddActivity extends AppCompatActivity{
 
         reminderSpinner = findViewById(R.id.spinner_reminder);
         initSpinner(reminderSpinner,R.array.reminder_array);
+
+        showDatePicker();
+        showTimePicker();
     }
 
     private void initDB(){
@@ -67,7 +83,7 @@ public class AddActivity extends AppCompatActivity{
 
         //TODO: change later!
         final int reminderId = 0;
-        final Date taskFinished = new Date(2018,07,30);
+        final Date taskFinished = new Date(2018, 7,30);
         final int priority = 1;
         final boolean solved = true;
 
@@ -139,31 +155,67 @@ public class AddActivity extends AppCompatActivity{
         });
     }
 
-    //already in initListener!
-    /*private void initButton(){
-        addButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Toast toast = Toast.makeText(getApplicationContext(),
-                            "Durch diesen Klick sollten die Werte als neues Task Objekt gespeichert und in die Datenbank übertragen werden",
-                            Toast.LENGTH_SHORT);
-                    toast.show();
-                    String titleInputString = title.getText().toString();
-                    String descriptionInputString = description.getText().toString();
-
-                    //int reminderId = aus Spinner
-                    //Date dateTaskFinished = Date aus Spinner, vllt noch in ne bestimmte Form gebracht..
-                    //int priority = aus Spinner? oder neue Auswahlmöglichkeit
-                    boolean solved = false;
-                    //wird wohl keiner auf die Idee kommen, sich ne neue Erinnerung für was bereits abgeschlossenes zu machen, oder?
-                    //falls doch, sollten wir das vielleicht als Fehler hier abfangen...
-
-                    //Task task = new Task(id, titleInputString, descriptionInputString, reminderId, dateTaskFinished, priority, solved);
-                            //id muss immer weiter hoch zählen, darf nie 2 mal den selben wert geben, also höchsten wert irgendwo abspeichern -> ++
-                            //
+    //Youtube Android for Beginners 27
+    public void showDatePicker() {
+        datePickerButton = findViewById(R.id.button_date_picker);
+        datePickerButton.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        showDialog(DIALOG_ID_DATE);
+                    }
+                });
+    }
+    private void getCurrentDate() {
+        final Calendar calendar = Calendar.getInstance();
+        datePickerYear = calendar.get(Calendar.YEAR);
+        datePickerMonth = calendar.get(Calendar.MONTH);
+        datePickerDay = calendar.get(Calendar.DAY_OF_MONTH);
+    }
+    protected DatePickerDialog.OnDateSetListener datePickerListner = new DatePickerDialog.OnDateSetListener() {
+        @SuppressLint("SetTextI18n")
+        @Override
+        public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+            datePickerYear = year;
+            datePickerMonth = month + 1;
+            datePickerDay = dayOfMonth;
+            //Toast.makeText(AddActivity.this, datePickerYear + "/" + datePickerMonth + "/" + datePickerDay, Toast.LENGTH_SHORT).show();
+            datePickerButton.setText(datePickerDay + "/" + datePickerMonth + "/" + datePickerYear);
+        }
+    };
+    //timePicker Dialog youtube for Beginner
+    protected TimePickerDialog.OnTimeSetListener timePickerListener = new TimePickerDialog.OnTimeSetListener() {
+        @SuppressLint("SetTextI18n")
+        @Override
+        public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+            timePickerHour = hourOfDay;
+            timePickerMinute = minute;
+            timePickerButton.setText(timePickerHour + ":" + timePickerMinute + "Uhr");
+        }
+    };
+    public void showTimePicker () {
+        timePickerButton = findViewById(R.id.button_time_picker);
+        timePickerButton.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        showDialog(DIALOG_ID_TIME);
+                    }
                 }
-            });
-        }*/
+        );
+    }
 
+    //Gemeinsames Abrufen von TimePickern und DatePickern
+    @Override
+    protected Dialog onCreateDialog(int id) {
+        switch (id) {
+            case DIALOG_ID_TIME: {
+                return new TimePickerDialog(this, timePickerListener, timePickerHour, timePickerMinute, false);
+            }
+            case DIALOG_ID_DATE: {
+                return new DatePickerDialog(this, datePickerListner, datePickerYear, datePickerMonth, datePickerDay);
+            }
+        }
+        return null;
+    }
 }
-
