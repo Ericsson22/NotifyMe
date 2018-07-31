@@ -4,16 +4,16 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
-    <string name="nav_under_headline">The best to remeber</string>
+    <string name="nav_under_headline">The Best to Remember</string>
     <string name="headline_settings"> Einstellungen</string>
     <string name="headline_solved"> Erledigte Aufgaben</string>
-    <string name="headline_add">Neue Erinnerung</string>
-    <string name="edit_hint">Titel der Erinnerung</string>
-    <string name="short_Description_hint">Kurzbeschreibung</string>
+    <string name="headline_add">Neuer Eintrag</string>
+    <string name="title_hint">Titel</string>
+    <string name="description_hint">Kurzbeschreibung</string>
     <string name="add">Hinzufügen</string>
     <string name="notification">Erinnerung</string>
 
-    <string-array name="remember_array">
+    <string-array name="reminder_array">
         <item>nein</item>
         <item>zum Ereigniszeitpunkt</item>
         <item>10 Minuten vorher</item>
