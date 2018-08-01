@@ -29,9 +29,11 @@ import java.util.Calendar;
 public class AddActivity extends AppCompatActivity {
 
     private Spinner reminderSpinner;
+    private Spinner prioritySpinner;
     private Button saveButton, datePickerButton, timePickerButton;
     private EditText titleInput, descriptionInput;
     private TaskDatabase taskDatabase;
+
 
     private int datePickerYear, datePickerMonth, datePickerDay;
     private int timePickerHour, timePickerMinute;
@@ -59,7 +61,9 @@ public class AddActivity extends AppCompatActivity {
         descriptionInput = findViewById(R.id.input_description);
 
         reminderSpinner = findViewById(R.id.spinner_reminder);
-        initSpinner(reminderSpinner, R.array.reminder_array);
+        initNotificationSpinner(reminderSpinner, R.array.reminder_array);
+        prioritySpinner=findViewById(R.id.spinner_prioriy);
+        initPrioritySpinner(prioritySpinner, R.array.priority_array);
 
         showDatePicker();
         showTimePicker();
@@ -125,7 +129,7 @@ public class AddActivity extends AppCompatActivity {
         }
     }
 
-    private void initSpinner(Spinner spinner, int arrayID) {
+    private void initNotificationSpinner(Spinner spinner, int arrayID) {
 
         // Adaptersetup
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
@@ -149,6 +153,30 @@ public class AddActivity extends AppCompatActivity {
                 Toast toast = Toast.makeText(getApplicationContext(),
                         "Hallo, 123 check, leider sag ich schon hallo, wenn du die Activity öffnest", Toast.LENGTH_SHORT);
                 toast.show();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+    }
+
+    private void initPrioritySpinner(Spinner spinner, int arrayID) {
+
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
+                AddActivity.this, arrayID,
+                android.R.layout.simple_spinner_item);
+
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
+
+        // Benötigten Listener Implementieren und die Methoden überschreiben
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View v,
+                                       int position, long arg3) {
             }
 
             @Override
@@ -184,8 +212,7 @@ public class AddActivity extends AppCompatActivity {
             datePickerYear = year;
             datePickerMonth = month + 1;
             datePickerDay = dayOfMonth;
-            //Toast.makeText(AddActivity.this, datePickerYear + "/" + datePickerMonth + "/" + datePickerDay, Toast.LENGTH_SHORT).show();
-            datePickerButton.setText(datePickerDay + "/" + datePickerMonth + "/" + datePickerYear);
+            dateWriteInNorm();
         }
     };
 
@@ -196,7 +223,7 @@ public class AddActivity extends AppCompatActivity {
         public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
             timePickerHour = hourOfDay;
             timePickerMinute = minute;
-            timePickerButton.setText(timePickerHour + ":" + timePickerMinute + "Uhr");
+            timeWriteInNorm();
         }
     };
 
@@ -211,13 +238,38 @@ public class AddActivity extends AppCompatActivity {
                 }
         );
     }
+    //Wandelt die Beschriftung des Buttons mit der Zeit in das Format 00:00 Uhr um
+    private void timeWriteInNorm (){
+        if(timePickerMinute<10&&timePickerHour<10) {
+            timePickerButton.setText("0" + timePickerHour + ":" + "0" + timePickerMinute +" "+ "Uhr");
+        }else if(timePickerMinute<10&&timePickerHour>=10){
+            timePickerButton.setText(timePickerHour + ":" + "0" + timePickerMinute + " "+"Uhr");
+        }else if (timePickerMinute>=10&&timePickerHour<10){
+            timePickerButton.setText( "0" +timePickerHour + ":" + timePickerMinute + " "+"Uhr");
+        }else {
+            timePickerButton.setText(timePickerHour + ":" + timePickerMinute + " "+ "Uhr");
+        }
+    }
+    //Wandelt die Beschriftung des Buttons mit der Datum in das Format 00.00.0000 um
+    private void dateWriteInNorm (){
+        if(datePickerMonth<10&&datePickerDay<10) {
+            datePickerButton.setText("0" + datePickerDay + "." + "0" + datePickerMonth +"."+ datePickerYear);
+        }else if(datePickerMonth<10&&datePickerDay>=10){
+            datePickerButton.setText(datePickerDay + "." + "0" + datePickerMonth + "."+datePickerYear);
+        }else if (datePickerMonth>=10&&datePickerDay<10){
+            datePickerButton.setText( "0" +datePickerDay + "." + datePickerMonth+ "."+datePickerYear);
+        }else {
+            datePickerButton.setText(timePickerHour + ":" + timePickerMinute + " "+ "Uhr");
+        }
+    }
+
 
     //Gemeinsames Abrufen von TimePickern und DatePickern
     @Override
     protected Dialog onCreateDialog(int id) {
         switch (id) {
             case DIALOG_ID_TIME: {
-                return new TimePickerDialog(this, timePickerListener, timePickerHour, timePickerMinute, false);
+                return new TimePickerDialog(this, timePickerListener, timePickerHour, timePickerMinute, true);
             }
             case DIALOG_ID_DATE: {
                 return new DatePickerDialog(this, datePickerListner, datePickerYear, datePickerMonth, datePickerDay);
