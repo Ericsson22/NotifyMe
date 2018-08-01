@@ -1,6 +1,8 @@
 package com.example.notifyme;
 
-import android.annotation.SuppressLint;
+import android.app.DatePickerDialog;
+import android.app.Dialog;
+import android.app.TimePickerDialog;
 import android.arch.persistence.room.Room;
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,24 +13,19 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
-import java.util.Date;
-
-import android.app.DatePickerDialog;
-import android.app.Dialog;
-import android.app.TimePickerDialog;
-import android.widget.DatePicker;
-import android.widget.TimePicker;
-
 import java.util.Calendar;
+import java.util.Date;
 
 
 public class AddActivity extends AppCompatActivity {
 
-    private Spinner reminderSpinner;
+    private Spinner reminderSpinner, prioritySpinner;
     private Button saveButton, datePickerButton, timePickerButton;
     private EditText titleInput, descriptionInput;
     private TaskDatabase taskDatabase;
@@ -59,7 +56,9 @@ public class AddActivity extends AppCompatActivity {
         descriptionInput = findViewById(R.id.input_description);
 
         reminderSpinner = findViewById(R.id.spinner_reminder);
-        initSpinner(reminderSpinner, R.array.reminder_array);
+        prioritySpinner=findViewById(R.id.spinner_prioriy);
+        initNotificationSpinner(reminderSpinner, R.array.reminder_array);
+        initPrioritySpinner(prioritySpinner, R.array.priority_array);
 
         showDatePicker();
         showTimePicker();
@@ -125,7 +124,7 @@ public class AddActivity extends AppCompatActivity {
         }
     }
 
-    private void initSpinner(Spinner spinner, int arrayID) {
+    private void initNotificationSpinner(Spinner spinner, int arrayID) {
 
         // Adaptersetup
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
@@ -158,6 +157,24 @@ public class AddActivity extends AppCompatActivity {
         });
     }
 
+    private void initPrioritySpinner(Spinner spinner, int arrayID) {
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
+                AddActivity.this, arrayID,
+                android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
+        // Benötigten Listener Implementieren und die Methoden überschreiben
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View v,
+                                       int position, long arg3) {
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+            }
+        });
+    }
+
     //Youtube Android for Beginners 27
     public void showDatePicker() {
         datePickerButton = findViewById(R.id.button_date_picker);
@@ -178,25 +195,22 @@ public class AddActivity extends AppCompatActivity {
     }
 
     protected DatePickerDialog.OnDateSetListener datePickerListner = new DatePickerDialog.OnDateSetListener() {
-        @SuppressLint("SetTextI18n")
         @Override
         public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
             datePickerYear = year;
             datePickerMonth = month + 1;
             datePickerDay = dayOfMonth;
-            //Toast.makeText(AddActivity.this, datePickerYear + "/" + datePickerMonth + "/" + datePickerDay, Toast.LENGTH_SHORT).show();
-            datePickerButton.setText(datePickerDay + "/" + datePickerMonth + "/" + datePickerYear);
+            formatDate();
         }
     };
 
     //timePicker Dialog youtube for Beginner
     protected TimePickerDialog.OnTimeSetListener timePickerListener = new TimePickerDialog.OnTimeSetListener() {
-        @SuppressLint("SetTextI18n")
         @Override
         public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
             timePickerHour = hourOfDay;
             timePickerMinute = minute;
-            timePickerButton.setText(timePickerHour + ":" + timePickerMinute + "Uhr");
+            formatTime();
         }
     };
 
@@ -212,12 +226,39 @@ public class AddActivity extends AppCompatActivity {
         );
     }
 
+    //Wandelt die Beschriftung des Buttons mit der Zeit in das Format 00:00 Uhr um
+    private void formatTime(){
+        if(timePickerMinute < 10 && timePickerHour < 10) {
+            timePickerButton.setText("0" + timePickerHour + ":" + "0" + timePickerMinute +" "+ "Uhr");
+        }else if(timePickerMinute < 10 && timePickerHour >= 10){
+            timePickerButton.setText(timePickerHour + ":" + "0" + timePickerMinute + " "+"Uhr");
+        }else if (timePickerMinute >= 10 && timePickerHour < 10){
+            timePickerButton.setText( "0" +timePickerHour + ":" + timePickerMinute + " "+"Uhr");
+        }else {
+            timePickerButton.setText(timePickerHour + ":" + timePickerMinute + " "+ "Uhr");
+        }
+    }
+    //Wandelt die Beschriftung des Buttons mit der Datum in das Format 00.00.0000 um
+    private void formatDate(){
+        if(datePickerMonth < 10 && datePickerDay < 10) {
+            datePickerButton.setText("0" + datePickerDay + "." + "0" + datePickerMonth +"."+ datePickerYear);
+        }else if(datePickerMonth < 10 && datePickerDay >= 10){
+            datePickerButton.setText(datePickerDay + "." + "0" + datePickerMonth + "."+datePickerYear);
+        }else if (datePickerMonth >= 10 && datePickerDay < 10){
+            datePickerButton.setText( "0" +datePickerDay + "." + datePickerMonth+ "."+datePickerYear);
+        }else {
+            datePickerButton.setText(timePickerHour + ":" + timePickerMinute + " "+ "Uhr");
+        }
+    }
+
+
+
     //Gemeinsames Abrufen von TimePickern und DatePickern
     @Override
     protected Dialog onCreateDialog(int id) {
         switch (id) {
             case DIALOG_ID_TIME: {
-                return new TimePickerDialog(this, timePickerListener, timePickerHour, timePickerMinute, false);
+                return new TimePickerDialog(this, timePickerListener, timePickerHour, timePickerMinute, true);
             }
             case DIALOG_ID_DATE: {
                 return new DatePickerDialog(this, datePickerListner, datePickerYear, datePickerMonth, datePickerDay);

@@ -29,9 +29,9 @@ public class ListTaskAdapter extends ArrayAdapter<Task> {
     public View getView(int position, View convertView, ViewGroup parent){
         View v = convertView;
 
-        taskTitle = (TextView) v.findViewById(R.id.list_title);
-        dueDate = (TextView) v.findViewById(R.id.list_due_date);
-        priority = (TextView) v.findViewById(R.id.list_priority);
+        taskTitle = v.findViewById(R.id.list_title);
+        dueDate = v.findViewById(R.id.list_due_date);
+        priority = v.findViewById(R.id.list_priority);
 
         Task task = tasks.get(position);
         // this is for when we want to change the background color depending on due date and priority

@@ -14,9 +14,11 @@
     <string name="notification">Erinnerung</string>
     <string name="date_picker_text">Datum</string>
     <string name="time_picker_text">Zeit</string>
+    <string name="priority_title">Priorität</string>
+    <string name="headline_time_date_input">Wann endet das Ereignis oder wann findet es statt?</string>
 
     <string-array name="reminder_array">
-        <item>nein</item>
+        <item>keine</item>
         <item>zum Ereigniszeitpunkt</item>
         <item>10 Minuten vorher</item>
         <item>15 Minuten vorher</item>
@@ -26,6 +28,14 @@
         <item>1 Tag vorher</item>
         <item>2 Tage vorher</item>
         <item>1 Woche vorher</item>
+    </string-array>
+
+    <string-array name="priority_array">
+        <item>Höchste Priorität</item>
+        <item>Sehr Dringend</item>
+        <item>Dringend</item>
+        <item>Nicht so dringend</item>
+        <item>Bei Gelegenheit</item>
     </string-array>
 
 </resources>

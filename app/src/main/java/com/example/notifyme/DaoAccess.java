@@ -6,5 +6,5 @@ import android.arch.persistence.room.Insert;
 @Dao
 public interface DaoAccess {
     @Insert
-    public void insertTask(Task task);
+    void insertTask(Task task);
 }
