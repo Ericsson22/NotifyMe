@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.List;
@@ -29,16 +30,21 @@ public class ListTaskAdapter extends ArrayAdapter<Task> {
     public View getView(int position, View convertView, ViewGroup parent){
         View v = convertView;
 
+        if (v == null) {
+            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            v = inflater.inflate(R.layout.list_view_item, null);
+        }
+
         taskTitle = v.findViewById(R.id.list_title);
-        dueDate = v.findViewById(R.id.list_due_date);
-        priority = v.findViewById(R.id.list_priority);
+        //dueDate = v.findViewById(R.id.list_due_date);
+       //priority = v.findViewById(R.id.list_priority);
 
         Task task = tasks.get(position);
         // this is for when we want to change the background color depending on due date and priority
         // v.setBackgroundResource(getColorForPriority(task.getPriority()));
         taskTitle.setText(task.getTaskTitle());
-        dueDate.setText(String.valueOf(task.getDueDate()));
-        priority.setText(String.valueOf(task.getPriority()));
+        //dueDate.setText(String.valueOf(task.getDueDate()));
+        //priority.setText(String.valueOf(task.getPriority()));
 
         return v;
     }

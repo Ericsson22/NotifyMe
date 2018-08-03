@@ -39,7 +39,6 @@ public class Task {
     private boolean solved;
 
     public Task(){
-
     }
 
     public void setTaskId(@NonNull int taskId) {

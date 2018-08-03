@@ -15,6 +15,10 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ListView;
+import android.widget.Toast;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -26,6 +30,7 @@ public class MainActivity extends AppCompatActivity
     private NavigationView navigationView;
 
     private ListTaskAdapter listTaskAdapter;
+    private ArrayList<Task> tasks;
     private ListView taskList;
     private TaskDatabase taskDatabase;
 
@@ -37,9 +42,7 @@ public class MainActivity extends AppCompatActivity
         setupUI();
         initListeners();
         initAdapter();
-        /*
         initDB();
-        doesn't work right now; when uncommented, app crashes */
 
         //TODO: initiate adapter (array adapter enough? or custom adapter?)
     }
@@ -76,14 +79,17 @@ public class MainActivity extends AppCompatActivity
         startActivity(addIntent);
     }
 
-    private void initAdapter(){
-        //TODO: add the adapter
-    }
-
     private void initDB(){
         taskDatabase = Room.databaseBuilder(getApplicationContext(),TaskDatabase.class,
                 Constants.DATABASE_NAME).fallbackToDestructiveMigration().build();
+        Toast.makeText(getApplicationContext(),"Hi", Toast.LENGTH_SHORT).show();
         //TODO: filter for activated tasks, "delete" solved tasks
+    }
+
+    private void initAdapter(){
+        tasks = new ArrayList<>();
+        listTaskAdapter = new ListTaskAdapter(MainActivity.this,tasks);
+        taskList.setAdapter(listTaskAdapter);
     }
 
     @Override

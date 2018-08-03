@@ -19,6 +19,7 @@ import android.widget.Spinner;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -29,6 +30,7 @@ public class AddActivity extends AppCompatActivity {
     private Button saveButton, datePickerButton, timePickerButton;
     private EditText titleInput, descriptionInput;
     private TaskDatabase taskDatabase;
+    private ArrayList<Task> tasks;
 
     private int datePickerYear, datePickerMonth, datePickerDay;
     private int timePickerHour, timePickerMinute;
@@ -44,19 +46,18 @@ public class AddActivity extends AppCompatActivity {
 
         getCurrentDate();
         setupUI();
-        //TODO: find mistake, stop app from crashing as soon as clicked on the floating add button
-        //when both methods are commented, app doesn't crash --> mistake must be with database
         initDB();
         initListener();
     }
 
     private void setupUI() {
+        tasks = new ArrayList<>();
         saveButton = findViewById(R.id.save_button);
         titleInput = findViewById(R.id.input_title);
         descriptionInput = findViewById(R.id.input_description);
 
         reminderSpinner = findViewById(R.id.spinner_reminder);
-        prioritySpinner=findViewById(R.id.spinner_prioriy);
+        prioritySpinner = findViewById(R.id.spinner_prioriy);
         initNotificationSpinner(reminderSpinner, R.array.reminder_array);
         initPrioritySpinner(prioritySpinner, R.array.priority_array);
 
@@ -74,7 +75,13 @@ public class AddActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //when button is clicked, the new entry is saved
-                saveNewEntry();
+                if(titleInput != null) {
+                    saveNewEntry();
+                }
+
+                //when finished saving, change back to main activity
+                Intent intent = new Intent(AddActivity.this, MainActivity.class);
+                startActivity(intent);
             }
         });
     }
@@ -102,10 +109,6 @@ public class AddActivity extends AppCompatActivity {
 
                 //add new task in database
                 taskDatabase.daoAccess().insertTask(newTask);
-
-                //when finished saving, change back to main activity
-                Intent intent = new Intent(AddActivity.this, MainActivity.class);
-                startActivity(intent);
 
                 //TODO: notifyDataSetChanged when an adapter is initialised
             }
@@ -142,12 +145,7 @@ public class AddActivity extends AppCompatActivity {
             //hier kommt die weiterverarbeitung der versch. Werte rein
             public void onItemSelected(AdapterView<?> adapterView, View v,
                                        int position, long arg3) {
-                //dieser Toast wird aufgerufen, sobald man über den floating + button auf die AddActivity kommt?!
-                //Grund: beim Öffnen wird eine Auswahl ("nein") automatisch ausgewählt
-                //Und wenn man im Spinner etwas anklickt
-                Toast toast = Toast.makeText(getApplicationContext(),
-                        "Hallo, 123 check, leider sag ich schon hallo, wenn du die Activity öffnest", Toast.LENGTH_SHORT);
-                toast.show();
+
             }
 
             @Override
