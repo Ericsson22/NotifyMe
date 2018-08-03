@@ -2,6 +2,8 @@ package com.example.notifyme;
 
 import android.arch.persistence.room.TypeConverter;
 
+import org.joda.time.DateTime;
+
 import java.util.Date;
 
 public class Converters {
@@ -14,4 +16,6 @@ public class Converters {
     public static Long dateToTimestamp(Date date) {
         return date == null ? null : date.getTime();
     }
+
+
 }

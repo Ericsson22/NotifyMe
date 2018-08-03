@@ -19,7 +19,12 @@ import android.widget.Spinner;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
-import java.util.Calendar;
+import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
+import org.joda.time.LocalDateTime;
+import org.joda.time.LocalTime;
+
+import java.text.DecimalFormat;
 import java.util.Date;
 
 
@@ -35,6 +40,11 @@ public class AddActivity extends AppCompatActivity {
 
     static final int DIALOG_ID_DATE = 0;
     static final int DIALOG_ID_TIME = 1;
+
+    private LocalDate notificationDate;
+    private LocalTime notificationTime;
+    private LocalDateTime notificationDateAndTime;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,7 +66,7 @@ public class AddActivity extends AppCompatActivity {
         descriptionInput = findViewById(R.id.input_description);
 
         reminderSpinner = findViewById(R.id.spinner_reminder);
-        prioritySpinner=findViewById(R.id.spinner_prioriy);
+        prioritySpinner = findViewById(R.id.spinner_prioriy);
         initNotificationSpinner(reminderSpinner, R.array.reminder_array);
         initPrioritySpinner(prioritySpinner, R.array.priority_array);
 
@@ -74,6 +84,7 @@ public class AddActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //when button is clicked, the new entry is saved
+                putNotificationDateAndTimeTogether();
                 saveNewEntry();
             }
         });
@@ -142,12 +153,7 @@ public class AddActivity extends AppCompatActivity {
             //hier kommt die weiterverarbeitung der versch. Werte rein
             public void onItemSelected(AdapterView<?> adapterView, View v,
                                        int position, long arg3) {
-                //dieser Toast wird aufgerufen, sobald man über den floating + button auf die AddActivity kommt?!
-                //Grund: beim Öffnen wird eine Auswahl ("nein") automatisch ausgewählt
-                //Und wenn man im Spinner etwas anklickt
-                Toast toast = Toast.makeText(getApplicationContext(),
-                        "Hallo, 123 check, leider sag ich schon hallo, wenn du die Activity öffnest", Toast.LENGTH_SHORT);
-                toast.show();
+                
             }
 
             @Override
@@ -169,6 +175,7 @@ public class AddActivity extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> adapterView, View v,
                                        int position, long arg3) {
             }
+
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
             }
@@ -188,19 +195,22 @@ public class AddActivity extends AppCompatActivity {
     }
 
     private void getCurrentDate() {
-        final Calendar calendar = Calendar.getInstance();
-        datePickerYear = calendar.get(Calendar.YEAR);
-        datePickerMonth = calendar.get(Calendar.MONTH);
-        datePickerDay = calendar.get(Calendar.DAY_OF_MONTH);
+        DateTime currentDate = new DateTime(DateTime.now());
+        datePickerYear = currentDate.getYear();
+        datePickerMonth = currentDate.getMonthOfYear();
+        datePickerDay = currentDate.getDayOfMonth();
     }
 
     protected DatePickerDialog.OnDateSetListener datePickerListner = new DatePickerDialog.OnDateSetListener() {
         @Override
         public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
             datePickerYear = year;
-            datePickerMonth = month + 1;
+            datePickerMonth = month;
             datePickerDay = dayOfMonth;
-            formatDate();
+            LocalDate notificationDate = new LocalDate(datePickerYear, datePickerMonth, datePickerDay);
+            setNotificationDate(notificationDate);
+            DecimalFormat df = new DecimalFormat("00");
+            datePickerButton.setText("" + df.format(notificationDate.getDayOfMonth()) + "." + df.format(notificationDate.getMonthOfYear()) + "." + notificationDate.getYear());
         }
     };
 
@@ -210,9 +220,22 @@ public class AddActivity extends AppCompatActivity {
         public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
             timePickerHour = hourOfDay;
             timePickerMinute = minute;
-            formatTime();
+            LocalTime notificationTime = new LocalTime(timePickerHour, timePickerMinute);
+            setNotificationTime(notificationTime);
+            DecimalFormat df = new DecimalFormat("00");
+            timePickerButton.setText("" + df.format(notificationTime.getHourOfDay()) + ":" + df.format(notificationTime.getMinuteOfHour()));
         }
     };
+
+    private void putNotificationDateAndTimeTogether() {
+        notificationTime = getNotificationTime();
+        notificationDate = getNotificationDate();
+        notificationDateAndTime = new LocalDateTime(notificationDate.getYear(), notificationDate.getMonthOfYear(),
+                notificationDate.getDayOfMonth(), notificationTime.getHourOfDay(), notificationTime.getMinuteOfHour());
+        setNotificationDateAndTime(notificationDateAndTime);
+    }
+
+
 
     public void showTimePicker() {
         timePickerButton = findViewById(R.id.button_time_picker);
@@ -226,33 +249,6 @@ public class AddActivity extends AppCompatActivity {
         );
     }
 
-    //Wandelt die Beschriftung des Buttons mit der Zeit in das Format 00:00 Uhr um
-    private void formatTime(){
-        if(timePickerMinute < 10 && timePickerHour < 10) {
-            timePickerButton.setText("0" + timePickerHour + ":" + "0" + timePickerMinute +" "+ "Uhr");
-        }else if(timePickerMinute < 10 && timePickerHour >= 10){
-            timePickerButton.setText(timePickerHour + ":" + "0" + timePickerMinute + " "+"Uhr");
-        }else if (timePickerMinute >= 10 && timePickerHour < 10){
-            timePickerButton.setText( "0" +timePickerHour + ":" + timePickerMinute + " "+"Uhr");
-        }else {
-            timePickerButton.setText(timePickerHour + ":" + timePickerMinute + " "+ "Uhr");
-        }
-    }
-    //Wandelt die Beschriftung des Buttons mit der Datum in das Format 00.00.0000 um
-    private void formatDate(){
-        if(datePickerMonth < 10 && datePickerDay < 10) {
-            datePickerButton.setText("0" + datePickerDay + "." + "0" + datePickerMonth +"."+ datePickerYear);
-        }else if(datePickerMonth < 10 && datePickerDay >= 10){
-            datePickerButton.setText(datePickerDay + "." + "0" + datePickerMonth + "."+datePickerYear);
-        }else if (datePickerMonth >= 10 && datePickerDay < 10){
-            datePickerButton.setText( "0" +datePickerDay + "." + datePickerMonth+ "."+datePickerYear);
-        }else {
-            datePickerButton.setText(timePickerHour + ":" + timePickerMinute + " "+ "Uhr");
-        }
-    }
-
-
-
     //Gemeinsames Abrufen von TimePickern und DatePickern
     @Override
     protected Dialog onCreateDialog(int id) {
@@ -265,5 +261,29 @@ public class AddActivity extends AppCompatActivity {
             }
         }
         return null;
+    }
+
+    public void setNotificationDate(LocalDate notificationDate) {
+        this.notificationDate = notificationDate;
+    }
+
+    public LocalDate getNotificationDate() {
+        return notificationDate;
+    }
+
+    public LocalTime getNotificationTime() {
+        return notificationTime;
+    }
+
+    public void setNotificationTime(LocalTime notificationTime) {
+        this.notificationTime = notificationTime;
+    }
+
+    public LocalDateTime getNotificationDateAndTime() {
+        return notificationDateAndTime;
+    }
+
+    public void setNotificationDateAndTime(LocalDateTime notificationDateAndTime) {
+        this.notificationDateAndTime = notificationDateAndTime;
     }
 }
