@@ -4,19 +4,10 @@
     android:orientation="vertical"
     android:padding="16dp">
 
-    <TextView
-        android:id="@+id/headline_solved_activities"
-        android:layout_alignParentTop="true"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/headline_solved"
-        android:textAlignment="center"
-        android:textSize="20sp"
-        android:textStyle="bold" />
 
     <ListView
         android:id="@+id/itemSolvedListView"
-        android:layout_below="@id/headline_solved_activities"
+        android:layout_marginTop="16dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentBottom="true"

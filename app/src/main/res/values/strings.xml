@@ -16,6 +16,7 @@
     <string name="time_picker_text">Zeit</string>
     <string name="priority_title">Priorität</string>
     <string name="headline_time_date_input">Wann endet das Ereignis oder wann findet es statt?</string>
+    <string name="title_add_Activity">Neuer Eintrag</string>
 
     <string-array name="reminder_array">
         <item>keine</item>

@@ -19,17 +19,24 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".AddActivity">
+        <activity
+            android:name=".AddActivity"
+            android:label="@string/headline_add">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.notifyme.MainActivity" />
         </activity>
-        <activity android:name=".SettingsActivity">
+        <activity
+            android:name=".SettingsActivity"
+            android:label="@string/headline_settings">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.notifyme.MainActivity" />
         </activity>
-        <activity android:name=".SolvedTasksActivity">
+
+        <activity
+            android:name=".SolvedTasksActivity"
+            android:label="@string/headline_solved">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.notifyme.MainActivity" />
