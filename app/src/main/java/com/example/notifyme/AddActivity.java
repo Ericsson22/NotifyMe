@@ -17,7 +17,6 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TimePicker;
-import android.widget.Toast;
 
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
@@ -54,9 +53,7 @@ public class AddActivity extends AppCompatActivity {
 
         getCurrentDate();
         setupUI();
-        //TODO: find mistake, stop app from crashing as soon as clicked on the floating add button
-        //when both methods are commented, app doesn't crash --> mistake must be with database
-        initDB();
+        //initDB();
         initListener();
     }
 
@@ -83,9 +80,12 @@ public class AddActivity extends AppCompatActivity {
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //when button is clicked, the new entry is saved
-                putNotificationDateAndTimeTogether();
-                saveNewEntry();
+                if(titleInput != null) {
+                    //saveNewEntry();
+                }
+                //when finished saving, change back to main activity
+                Intent backIntent = new Intent(AddActivity.this, MainActivity.class);
+                startActivity(backIntent);
             }
         });
     }
@@ -94,11 +94,14 @@ public class AddActivity extends AppCompatActivity {
         final String title = titleInput.getText().toString();
         final String description = descriptionInput.getText().toString();
 
+        //check if a date was set; do we need one?
+        //show error message if necessary
+        putNotificationDateAndTimeTogether();
+
         //TODO: change later!
-        final int reminderId = 0;
-        final Date taskFinished = new Date(2018, 7, 30);
+        final String dueDate = "05.08.2018";
         final int priority = 1;
-        final boolean solved = true;
+        //final boolean solved = true;
 
         new Thread(new Runnable() {
             @Override
@@ -106,10 +109,9 @@ public class AddActivity extends AppCompatActivity {
                 Task newTask = new Task();
                 newTask.setTaskTitle(title);
                 newTask.setTaskDescription(description);
-                newTask.setReminderId(reminderId);
-                newTask.setTaskFinished(taskFinished);
+                newTask.setDueDate(dueDate);
                 newTask.setPriority(priority);
-                newTask.setTaskState(solved);
+                //newTask.setTaskState(solved);
 
                 //add new task in database
                 taskDatabase.daoAccess().insertTask(newTask);
@@ -201,7 +203,7 @@ public class AddActivity extends AppCompatActivity {
         datePickerDay = currentDate.getDayOfMonth();
     }
 
-    protected DatePickerDialog.OnDateSetListener datePickerListner = new DatePickerDialog.OnDateSetListener() {
+    protected DatePickerDialog.OnDateSetListener datePickerListener = new DatePickerDialog.OnDateSetListener() {
         @Override
         public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
             datePickerYear = year;
@@ -257,7 +259,7 @@ public class AddActivity extends AppCompatActivity {
                 return new TimePickerDialog(this, timePickerListener, timePickerHour, timePickerMinute, true);
             }
             case DIALOG_ID_DATE: {
-                return new DatePickerDialog(this, datePickerListner, datePickerYear, datePickerMonth, datePickerDay);
+                return new DatePickerDialog(this, datePickerListener, datePickerYear, datePickerMonth, datePickerDay);
             }
         }
         return null;

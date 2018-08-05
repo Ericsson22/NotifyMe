@@ -1,10 +1,13 @@
 package com.example.notifyme;
 
-import android.arch.persistence.room.Room;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -16,6 +19,14 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ListView;
 
+import java.util.List;
+
+import static com.example.notifyme.Constants.KEY_DUE_DATE;
+import static com.example.notifyme.Constants.KEY_PRIORITY;
+import static com.example.notifyme.Constants.KEY_SOLVED;
+import static com.example.notifyme.Constants.KEY_TITLE;
+import static com.example.notifyme.Constants.TABLE;
+
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -25,9 +36,11 @@ public class MainActivity extends AppCompatActivity
     private ActionBarDrawerToggle toggle;
     private NavigationView navigationView;
 
+    private DBHelper dbHelper;
     private ListTaskAdapter listTaskAdapter;
-    private ListView taskList;
-    private TaskDatabase taskDatabase;
+    private ListView taskListView;
+    private List<Task> tasks;
+    private SQLiteDatabase taskDatabase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,17 +50,17 @@ public class MainActivity extends AppCompatActivity
         setupUI();
         initListeners();
         initAdapter();
-        /*
-        initDB();
-        doesn't work right now; when uncommented, app crashes */
+        //initDB();
 
-        //TODO: initiate adapter (array adapter enough? or custom adapter?)
+        //http://saigeethamn.blogspot.com/2011/02/listview-of-data-from-sqlitedatabase.html
+        //openAndQueryDatabase();
+        //displayResultList();
     }
 
     private void setupUI() {
         fab = findViewById(R.id.floating_add_button);
         navigationView = findViewById(R.id.nav_view);
-        taskList = findViewById(R.id.list_view);
+        taskListView = findViewById(R.id.list_view);
 
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -77,13 +90,47 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void initAdapter(){
-        //TODO: add the adapter
+        dbHelper = new DBHelper(getApplicationContext());
+        tasks = dbHelper.getTaskList();
+        listTaskAdapter = new ListTaskAdapter(MainActivity.this,tasks);
+
+        taskListView.setAdapter(listTaskAdapter);
     }
 
     private void initDB(){
-        taskDatabase = Room.databaseBuilder(getApplicationContext(),TaskDatabase.class,
-                Constants.DATABASE_NAME).fallbackToDestructiveMigration().build();
+        /*taskDatabase = Room.databaseBuilder(getApplicationContext(),TaskDatabase.class,
+                Constants.DATABASE_NAME).fallbackToDestructiveMigration().build();*/
         //TODO: filter for activated tasks, "delete" solved tasks
+    }
+
+    private void openAndQueryDatabase(){
+        try {
+            taskDatabase = dbHelper.getWritableDatabase();
+            Cursor cursor = taskDatabase.rawQuery("SELECT " + KEY_TITLE + ", " + KEY_DUE_DATE + ", "
+                    + KEY_PRIORITY + " FROM " + TABLE, null);
+                    //+ " where " + KEY_SOLVED + " = false"
+            if(cursor != null){
+                if(cursor.moveToFirst()){
+                    do{
+                        String taskTitle = cursor.getString(cursor.getColumnIndex(KEY_TITLE));
+                        String dueDate = cursor.getString(cursor.getColumnIndex(KEY_DUE_DATE));
+                        int priority = cursor.getInt(cursor.getColumnIndex(KEY_PRIORITY));
+
+                    } while(cursor.moveToNext());
+                }
+            }
+
+        } catch (SQLiteException se ) {
+            Log.e(getClass().getSimpleName(), "Could not create or Open the database");
+        } finally {
+            if (taskDatabase != null)
+                taskDatabase.execSQL("DELETE FROM " + TABLE);
+            taskDatabase.close();
+        }
+    }
+
+    private void displayResultList(){
+
     }
 
     @Override
@@ -128,8 +175,8 @@ public class MainActivity extends AppCompatActivity
 
         switch (item.getItemId()){
             case R.id.nav_settings:
-                Intent tosettingsintent = new Intent(MainActivity.this, SettingsActivity.class); //Angabe von derzeitiger Seite und Zielseite
-                startActivity(tosettingsintent);
+                Intent settingsintent = new Intent(MainActivity.this, SettingsActivity.class); //Angabe von derzeitiger Seite und Zielseite
+                startActivity(settingsintent);
                 break;
 
             case R.id.solved_tasks:

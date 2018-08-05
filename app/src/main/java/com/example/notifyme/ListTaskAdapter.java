@@ -29,6 +29,11 @@ public class ListTaskAdapter extends ArrayAdapter<Task> {
     public View getView(int position, View convertView, ViewGroup parent){
         View v = convertView;
 
+        if (v == null) {
+            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            v = inflater.inflate(R.layout.list_view_item, null);
+        }
+
         taskTitle = v.findViewById(R.id.list_title);
         dueDate = v.findViewById(R.id.list_due_date);
         priority = v.findViewById(R.id.list_priority);
