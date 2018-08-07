@@ -40,10 +40,13 @@
     </string-array>
     <string name="title_activity_settings">Settings</string>
 
+
+
+
     <!-- Strings related to Settings -->
 
     <!-- Example General settings -->
-    <string name="pref_header_general">General</string>
+    <string name="pref_header_general">Allgemein</string>
 
     <string name="pref_title_social_recommendations">Enable social recommendations</string>
     <string name="pref_description_social_recommendations">Recommendations for people to contact
@@ -103,7 +106,7 @@
     <string name="pref_title_system_sync_settings">System sync settings</string>
 
     <!-- Example settings for Notifications -->
-    <string name="pref_header_notifications">Notifications</string>
+    <string name="pref_header_notifications">Benachrichtigungen</string>
 
     <string name="pref_title_new_message_notifications">New message notifications</string>
 
@@ -111,5 +114,8 @@
     <string name="pref_ringtone_silent">Silent</string>
 
     <string name="pref_title_vibrate">Vibrate</string>
+    <string name="layout_pref_title">Layout-Style Midnight</string>
+    <string name="dark_layout_descr">Schafft ein dunkleres Gesamt-Layout der App für die Benutzung in der Nacht</string>
+    <string name="notification_pref_title">Erinnerung für die Notizen</string>
 
 </resources>
