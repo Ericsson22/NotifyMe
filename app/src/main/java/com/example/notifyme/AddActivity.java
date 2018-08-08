@@ -45,6 +45,9 @@ public class AddActivity extends AppCompatActivity {
     private LocalTime notificationTime;
     private LocalDateTime notificationDateAndTime;
 
+    private int taskPriority;
+    private int reminderId;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,16 +96,15 @@ public class AddActivity extends AppCompatActivity {
     private void saveNewEntry() {
         final String title = titleInput.getText().toString();
         final String description = descriptionInput.getText().toString();
-
-        //TODO: change later!
-        final int reminderId = 0;
-        final Date taskFinished = new Date(2018, 7, 30);
-        final int priority = 1;
-        final boolean solved = true;
+        final int reminderId = getReminderId();
+        final Date taskFinished = getNotificationDateAndTime().toDate();
+        final int priority = getTaskPriority();
+        final boolean solved = false;
 
         new Thread(new Runnable() {
             @Override
             public void run() {
+                //TODO: handle if entries are null.
                 Task newTask = new Task();
                 newTask.setTaskTitle(title);
                 newTask.setTaskDescription(description);
@@ -153,17 +155,18 @@ public class AddActivity extends AppCompatActivity {
             //hier kommt die weiterverarbeitung der versch. Werte rein
             public void onItemSelected(AdapterView<?> adapterView, View v,
                                        int position, long arg3) {
-                
+                //set the reminderID to the number of list position
+                setReminderId(position);
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
-
+                setReminderId(0);
             }
         });
     }
 
-    private void initPrioritySpinner(Spinner spinner, int arrayID) {
+    private void initPrioritySpinner(Spinner spinner, final int arrayID) {
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
                 AddActivity.this, arrayID,
                 android.R.layout.simple_spinner_item);
@@ -174,10 +177,12 @@ public class AddActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View v,
                                        int position, long arg3) {
+                setTaskPriority(position);
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
+                setTaskPriority(4);
             }
         });
     }
@@ -257,7 +262,7 @@ public class AddActivity extends AppCompatActivity {
                 return new TimePickerDialog(this, timePickerListener, timePickerHour, timePickerMinute, true);
             }
             case DIALOG_ID_DATE: {
-                return new DatePickerDialog(this, datePickerListner, datePickerYear, datePickerMonth, datePickerDay);
+                return new DatePickerDialog(this, datePickerListner, datePickerYear, datePickerMonth -1, datePickerDay);
             }
         }
         return null;
@@ -285,5 +290,21 @@ public class AddActivity extends AppCompatActivity {
 
     public void setNotificationDateAndTime(LocalDateTime notificationDateAndTime) {
         this.notificationDateAndTime = notificationDateAndTime;
+    }
+
+    public int getTaskPriority() {
+        return taskPriority;
+    }
+
+    public void setTaskPriority(int taskPriority) {
+        this.taskPriority = taskPriority;
+    }
+
+    public int getReminderId() {
+        return reminderId;
+    }
+
+    public void setReminderId(int reminderId) {
+        this.reminderId = reminderId;
     }
 }
