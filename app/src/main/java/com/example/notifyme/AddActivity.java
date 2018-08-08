@@ -30,10 +30,11 @@ import java.util.Date;
 
 public class AddActivity extends AppCompatActivity {
 
+    private TaskDatabase taskDatabase;
+
     private Spinner reminderSpinner, prioritySpinner;
     private Button saveButton, datePickerButton, timePickerButton;
     private EditText titleInput, descriptionInput;
-    private TaskDatabase taskDatabase;
 
     private int datePickerYear, datePickerMonth, datePickerDay;
     private int timePickerHour, timePickerMinute;

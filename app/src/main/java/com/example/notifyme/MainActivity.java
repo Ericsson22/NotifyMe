@@ -16,6 +16,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ListView;
 
+import java.util.Date;
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -82,7 +85,24 @@ public class MainActivity extends AppCompatActivity
 
     private void initDB(){
         taskDatabase = Room.databaseBuilder(getApplicationContext(),TaskDatabase.class,
-                Constants.DATABASE_NAME).fallbackToDestructiveMigration().build();
+                Constants.DATABASE_NAME).allowMainThreadQueries().build();
+
+        List<Task> tasks = taskDatabase.daoAccess().getTasks();
+
+        String info = "";
+
+        for(Task task : tasks){
+            int id = task.getTaskId();
+            String title = task.getTaskTitle();
+            String description = task.getTaskDescription();
+            int reminderId = task.getReminderId();
+            Date taskFinished = task.getDueDate();
+            int priority = task.getPriority();
+            boolean solved = task.getTaskState();
+
+            info = "" + id + " " + title + " " + description + " " + reminderId + " " + taskFinished + " " + priority + " " + solved;
+        }
+
         //TODO: filter for activated tasks, "delete" solved tasks
     }
 
@@ -128,8 +148,8 @@ public class MainActivity extends AppCompatActivity
 
         switch (item.getItemId()){
             case R.id.nav_settings:
-                Intent tosettingsintent = new Intent(MainActivity.this, SettingsActivity.class); //Angabe von derzeitiger Seite und Zielseite
-                startActivity(tosettingsintent);
+                Intent settingsIntent = new Intent(MainActivity.this, SettingsActivity.class); //Angabe von derzeitiger Seite und Zielseite
+                startActivity(settingsIntent);
                 break;
 
             case R.id.solved_tasks:

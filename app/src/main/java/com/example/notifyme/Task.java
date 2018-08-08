@@ -7,7 +7,7 @@ import android.support.annotation.NonNull;
 
 import java.util.Date;
 
-@Entity
+@Entity(tableName = Constants.DATABASE_NAME)
 public class Task {
 
     //taskId created automatically and ongoing(no number twice)
