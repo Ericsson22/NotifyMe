@@ -16,6 +16,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ListView;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -29,8 +30,9 @@ public class MainActivity extends AppCompatActivity
     private NavigationView navigationView;
 
     private ListTaskAdapter listTaskAdapter;
-    private ListView taskList;
+    private ListView listView;
     private TaskDatabase taskDatabase;
+    List<Task> tasks;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,10 +41,8 @@ public class MainActivity extends AppCompatActivity
 
         setupUI();
         initListeners();
-        initAdapter();
-        /*
         initDB();
-        doesn't work right now; when uncommented, app crashes */
+        initAdapter();
 
         //TODO: initiate adapter (array adapter enough? or custom adapter?)
     }
@@ -50,7 +50,7 @@ public class MainActivity extends AppCompatActivity
     private void setupUI() {
         fab = findViewById(R.id.floating_add_button);
         navigationView = findViewById(R.id.nav_view);
-        taskList = findViewById(R.id.list_view);
+        listView = findViewById(R.id.list_view);
 
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -80,27 +80,40 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void initAdapter(){
-        //TODO: add the adapter
+        listTaskAdapter = new ListTaskAdapter(MainActivity.this, tasks);
+        listView.setAdapter(listTaskAdapter);
     }
 
     private void initDB(){
-        taskDatabase = Room.databaseBuilder(getApplicationContext(),TaskDatabase.class,
-                Constants.DATABASE_NAME).allowMainThreadQueries().build();
+        /*taskDatabase = Room.databaseBuilder(getApplicationContext(),TaskDatabase.class,
+                Constants.DATABASE_NAME).allowMainThreadQueries().build();*/
 
-        List<Task> tasks = taskDatabase.daoAccess().getTasks();
+        tasks = new ArrayList<Task>();
+        Task task = new Task();
+        task.setTaskId(0);
+        task.setTaskTitle("Säftl");
+        task.setTaskDescription("asd");
+        task.setDueDate(new Date(2018, 8,8,8,8,8));
+        task.setPriority(1);
+        task.setSolved(false);
+        task.setReminderId(2);
+        tasks.add(task);
+
+        //tasks = taskDatabase.daoAccess().getTasks();
 
         String info = "";
 
-        for(Task task : tasks){
-            int id = task.getTaskId();
-            String title = task.getTaskTitle();
-            String description = task.getTaskDescription();
-            int reminderId = task.getReminderId();
-            Date taskFinished = task.getDueDate();
-            int priority = task.getPriority();
-            boolean solved = task.getTaskState();
+        for(Task taskitem : tasks){
+            int id = taskitem.getTaskId();
+            String title = taskitem.getTaskTitle();
+            String description = taskitem.getTaskDescription();
+            int reminderId = taskitem.getReminderId();
+            Date dueDate = taskitem.getDueDate();
+            int priority = taskitem.getPriority();
+            boolean solved = taskitem.getTaskState();
 
-            info = "" + id + " " + title + " " + description + " " + reminderId + " " + taskFinished + " " + priority + " " + solved;
+            info = "ID: " + id + " Title: " + title + " Description: " + description + " ReminderID: " + reminderId + " DueDate: " + dueDate + " Priority: " + priority + " Solved: " + solved;
+            System.out.println("" + info);
         }
 
         //TODO: filter for activated tasks, "delete" solved tasks

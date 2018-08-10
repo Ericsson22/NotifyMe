@@ -17,9 +17,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TimePicker;
-import android.widget.Toast;
 
-import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
 import org.joda.time.LocalTime;
@@ -36,11 +34,10 @@ public class AddActivity extends AppCompatActivity {
     private Button saveButton, datePickerButton, timePickerButton;
     private EditText titleInput, descriptionInput;
 
-    private int datePickerYear, datePickerMonth, datePickerDay;
-    private int timePickerHour, timePickerMinute;
-
     static final int DIALOG_ID_DATE = 0;
     static final int DIALOG_ID_TIME = 1;
+
+    private int timePickerHour, timePickerMinute;
 
     private LocalDate notificationDate;
     private LocalTime notificationTime;
@@ -55,8 +52,6 @@ public class AddActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-        getCurrentDate();
         setupUI();
         //TODO: find mistake, stop app from crashing as soon as clicked on the floating add button
         //when both methods are commented, app doesn't crash --> mistake must be with database
@@ -200,23 +195,13 @@ public class AddActivity extends AppCompatActivity {
                 });
     }
 
-    private void getCurrentDate() {
-        DateTime currentDate = new DateTime(DateTime.now());
-        datePickerYear = currentDate.getYear();
-        datePickerMonth = currentDate.getMonthOfYear();
-        datePickerDay = currentDate.getDayOfMonth();
-    }
-
-    protected DatePickerDialog.OnDateSetListener datePickerListner = new DatePickerDialog.OnDateSetListener() {
+    protected DatePickerDialog.OnDateSetListener datePickerListener = new DatePickerDialog.OnDateSetListener() {
         @Override
         public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-            datePickerYear = year;
-            datePickerMonth = month;
-            datePickerDay = dayOfMonth;
-            LocalDate notificationDate = new LocalDate(datePickerYear, datePickerMonth, datePickerDay);
+            LocalDate notificationDate = new LocalDate(year, month, dayOfMonth);
             setNotificationDate(notificationDate);
             DecimalFormat df = new DecimalFormat("00");
-            datePickerButton.setText("" + df.format(notificationDate.getDayOfMonth()) + "." + df.format(notificationDate.getMonthOfYear()) + "." + notificationDate.getYear());
+            datePickerButton.setText("" + df.format(year) + "." + df.format(month + 1) + "." + dayOfMonth);
         }
     };
 
@@ -224,19 +209,17 @@ public class AddActivity extends AppCompatActivity {
     protected TimePickerDialog.OnTimeSetListener timePickerListener = new TimePickerDialog.OnTimeSetListener() {
         @Override
         public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-            timePickerHour = hourOfDay;
-            timePickerMinute = minute;
-            LocalTime notificationTime = new LocalTime(timePickerHour, timePickerMinute);
+            LocalTime notificationTime = new LocalTime(hourOfDay, minute);
             setNotificationTime(notificationTime);
             DecimalFormat df = new DecimalFormat("00");
-            timePickerButton.setText("" + df.format(notificationTime.getHourOfDay()) + ":" + df.format(notificationTime.getMinuteOfHour()));
+            timePickerButton.setText("" + df.format(hourOfDay) + ":" + df.format(minute));
         }
     };
 
     private void putNotificationDateAndTimeTogether() {
         notificationTime = getNotificationTime();
         notificationDate = getNotificationDate();
-        notificationDateAndTime = new LocalDateTime(notificationDate.getYear(), notificationDate.getMonthOfYear(),
+        notificationDateAndTime = new LocalDateTime(notificationDate.getYear(), notificationDate.getMonthOfYear() +1,
                 notificationDate.getDayOfMonth(), notificationTime.getHourOfDay(), notificationTime.getMinuteOfHour());
         setNotificationDateAndTime(notificationDateAndTime);
     }
@@ -258,12 +241,17 @@ public class AddActivity extends AppCompatActivity {
     //Gemeinsames Abrufen von TimePickern und DatePickern
     @Override
     protected Dialog onCreateDialog(int id) {
+            LocalDateTime currentDate = new LocalDateTime(LocalDateTime.now());
+            int datePickerYear = currentDate.getYear();
+            int datePickerMonth = currentDate.getMonthOfYear();
+            int datePickerDay = currentDate.getDayOfMonth();
+
         switch (id) {
             case DIALOG_ID_TIME: {
                 return new TimePickerDialog(this, timePickerListener, timePickerHour, timePickerMinute, true);
             }
             case DIALOG_ID_DATE: {
-                return new DatePickerDialog(this, datePickerListner, datePickerYear, datePickerMonth -1, datePickerDay);
+                return new DatePickerDialog(this, datePickerListener, datePickerYear, datePickerMonth -1, datePickerDay);
             }
         }
         return null;
