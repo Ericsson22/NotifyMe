@@ -9,13 +9,16 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 public class ListTaskAdapter extends ArrayAdapter<Task> {
 
     private Context context;
     private List<Task> tasks;
-    private TextView taskTitle, dueDate, priority;
+    private TextView taskTitle, dueDate, description;
 
 
     //this is the adapter for the ListViews (MainActivity & SolvedTasksActivity)
@@ -38,15 +41,20 @@ public class ListTaskAdapter extends ArrayAdapter<Task> {
         }
 
         taskTitle = v.findViewById(R.id.list_title);
+        description = v.findViewById(R.id.list_description);
         dueDate = v.findViewById(R.id.list_due_date);
-        priority = v.findViewById(R.id.list_priority);
 
         Task task = tasks.get(position);
         // this is for when we want to change the background color depending on due date and priority
         // v.setBackgroundResource(getColorForPriority(task.getPriority()));
         taskTitle.setText(task.getTaskTitle());
-        dueDate.setText(task.getDueDate().toString());
-        priority.setText(task.getPriority());
+        description.setText("\"" + task.getTaskDescription() + "\"");
+        Date date = task.getDueDate();
+        DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy   HH:mm");
+
+        //to convert Date to String, use format method of SimpleDateFormat class.
+        String strDate = dateFormat.format(date);
+        dueDate.setText(strDate);
 
         return v;
     }

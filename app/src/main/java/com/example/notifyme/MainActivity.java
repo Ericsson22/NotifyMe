@@ -85,10 +85,10 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void initDB(){
-        /*taskDatabase = Room.databaseBuilder(getApplicationContext(),TaskDatabase.class,
-                Constants.DATABASE_NAME).allowMainThreadQueries().build();*/
+        taskDatabase = Room.databaseBuilder(getApplicationContext(),TaskDatabase.class,
+                Constants.DATABASE_NAME).allowMainThreadQueries().build();
 
-        tasks = new ArrayList<Task>();
+        /*tasks = new ArrayList<Task>();
         Task task = new Task();
         task.setTaskId(0);
         task.setTaskTitle("Säftl");
@@ -97,9 +97,9 @@ public class MainActivity extends AppCompatActivity
         task.setPriority(1);
         task.setSolved(false);
         task.setReminderId(2);
-        tasks.add(task);
+        tasks.add(task);*/
 
-        //tasks = taskDatabase.daoAccess().getTasks();
+        tasks = taskDatabase.daoAccess().getTasks();
 
         String info = "";
 
