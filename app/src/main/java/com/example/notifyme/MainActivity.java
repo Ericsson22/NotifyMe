@@ -2,9 +2,13 @@ package com.example.notifyme;
 
 import android.arch.persistence.room.Room;
 import android.content.Intent;
+import android.graphics.Canvas;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -28,11 +32,13 @@ public class MainActivity extends AppCompatActivity
     private DrawerLayout drawer;
     private ActionBarDrawerToggle toggle;
     private NavigationView navigationView;
-
-    private ListTaskAdapter listTaskAdapter;
-    private ListView listView;
+    private RecyclerListAdapter recyclerListAdapter;
     private TaskDatabase taskDatabase;
     List<Task> tasks;
+
+    RecyclerView recyclerView;
+    private SwipeController swipeController;
+    private ItemTouchHelper itemTouchHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +49,7 @@ public class MainActivity extends AppCompatActivity
         initListeners();
         initDB();
         initAdapter();
+        initItemTouchHelper();
 
         //TODO: initiate adapter (array adapter enough? or custom adapter?)
     }
@@ -50,7 +57,6 @@ public class MainActivity extends AppCompatActivity
     private void setupUI() {
         fab = findViewById(R.id.floating_add_button);
         navigationView = findViewById(R.id.nav_view);
-        listView = findViewById(R.id.list_view);
 
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -59,9 +65,11 @@ public class MainActivity extends AppCompatActivity
         toggle = new ActionBarDrawerToggle(this, drawer, toolbar,
                 R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         toggle.syncState();
+
+        recyclerView = (RecyclerView) findViewById(R.id.recycle_list_View);
     }
 
-    private void initListeners(){
+    private void initListeners() {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -74,36 +82,26 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
     }
 
-    private void changeToAddActivity(){
+    private void changeToAddActivity() {
         Intent addIntent = new Intent(MainActivity.this, AddActivity.class);
         startActivity(addIntent);
     }
 
-    private void initAdapter(){
-        listTaskAdapter = new ListTaskAdapter(MainActivity.this, tasks);
-        listView.setAdapter(listTaskAdapter);
+    private void initAdapter() {
+        recyclerListAdapter = new RecyclerListAdapter(tasks);
+
+        recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        recyclerView.setAdapter(recyclerListAdapter);
     }
 
-    private void initDB(){
-        taskDatabase = Room.databaseBuilder(getApplicationContext(),TaskDatabase.class,
+    private void initDB() {
+        taskDatabase = Room.databaseBuilder(getApplicationContext(), TaskDatabase.class,
                 Constants.DATABASE_NAME).allowMainThreadQueries().build();
-
-        /*tasks = new ArrayList<Task>();
-        Task task = new Task();
-        task.setTaskId(0);
-        task.setTaskTitle("Säftl");
-        task.setTaskDescription("asd");
-        task.setDueDate(new Date(2018, 8,8,8,8,8));
-        task.setPriority(1);
-        task.setSolved(false);
-        task.setReminderId(2);
-        tasks.add(task);*/
-
         tasks = taskDatabase.daoAccess().getTasks();
 
         String info = "";
 
-        for(Task taskitem : tasks){
+        for (Task taskitem : tasks) {
             int id = taskitem.getTaskId();
             String title = taskitem.getTaskTitle();
             String description = taskitem.getTaskDescription();
@@ -117,6 +115,25 @@ public class MainActivity extends AppCompatActivity
         }
 
         //TODO: filter for activated tasks, "delete" solved tasks
+    }
+
+    private void initItemTouchHelper() {
+        swipeController = new SwipeController(new SwipeControllerActions() {
+            @Override
+            public void onRightClicked(int position) {
+                recyclerListAdapter.tasks.remove(position);
+                recyclerListAdapter.notifyItemRemoved(position);
+                recyclerListAdapter.notifyItemRangeChanged(position, recyclerListAdapter.getItemCount());
+            }
+        });
+        itemTouchHelper = new ItemTouchHelper(swipeController);
+        itemTouchHelper.attachToRecyclerView(recyclerView);
+        recyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
+            @Override
+            public void onDraw(Canvas c, RecyclerView parent, RecyclerView.State state) {
+                swipeController.onDraw(c);
+            }
+        });
     }
 
     @Override
@@ -159,7 +176,7 @@ public class MainActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         // Handle navigation view item clicks here.
 
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.nav_settings:
                 Intent settingsIntent = new Intent(MainActivity.this, SettingsActivity.class); //Angabe von derzeitiger Seite und Zielseite
                 startActivity(settingsIntent);
@@ -189,4 +206,6 @@ public class MainActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
+
 }
