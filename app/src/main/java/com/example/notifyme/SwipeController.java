@@ -1,4 +1,4 @@
-//FROM: https://github.com/FanFataL/swipe-controller-demo
+//FROM: https://github.com/FanFataL/swipe-controller-demo; minor changes done to prevent swipe from left and to draw the second button.
 
 package com.example.notifyme;
 import android.graphics.Canvas;

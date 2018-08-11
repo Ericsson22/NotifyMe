@@ -48,13 +48,10 @@ class RecyclerListAdapter extends RecyclerView.Adapter<RecyclerListAdapter.Playe
 
         Date dueDate = task.getDueDate();
         DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy, HH:mm");
-        //to convert Date to String, use format method of SimpleDateFormat class.
         String strDate = dateFormat.format(dueDate);
+
         holder.description.setText(strDate + " Uhr");
         holder.taskID.setText("TaskID: " + task.getTaskId());
-
-        /*holder.rating.setText(task.getRating().toString());
-        holder.age.setText(task.getAge().toString());*/
     }
 
     @Override

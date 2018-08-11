@@ -61,14 +61,16 @@
                 android:layout_height="wrap_content"
                 android:text=""/>
 
-            <!--<TextView
-                android:id="@+id/id"
+            <!-- Lasst das bitte mal noch drin,
+            vielleicht brauch ich das später noch um solved an zu zeigen.
+            <TextView
+                android:id="@+id/solved"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:gravity="end"
                 android:textAlignment="textEnd"
                 android:textSize="9sp"
-                tools:text="11" />-->
+                tools:text="solved: " />-->
 
             <TextView
                 android:id="@+id/taskID"
@@ -85,4 +87,6 @@
 
 </android.support.v7.widget.CardView>
 
-    <!-- FROM: https://codeburst.io/android-swipe-menu-with-recyclerview-8f28a235ff28-->
+    <!--
+FROM: https://github.com/FanFataL/swipe-controller-demo
+-->

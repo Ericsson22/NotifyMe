@@ -6,21 +6,18 @@ import android.graphics.Canvas;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.helper.ItemTouchHelper;
-import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ListView;
-
-import java.util.ArrayList;
+import android.view.View;
 import java.util.Date;
 import java.util.List;
 
@@ -101,17 +98,14 @@ public class MainActivity extends AppCompatActivity
 
         String info = "";
 
-        for (Task taskitem : tasks) {
-            int id = taskitem.getTaskId();
-            String title = taskitem.getTaskTitle();
-            String description = taskitem.getTaskDescription();
-            int reminderId = taskitem.getReminderId();
-            Date dueDate = taskitem.getDueDate();
-            int priority = taskitem.getPriority();
-            boolean solved = taskitem.getTaskState();
-
-            info = "ID: " + id + " Title: " + title + " Description: " + description + " ReminderID: " + reminderId + " DueDate: " + dueDate + " Priority: " + priority + " Solved: " + solved;
-            System.out.println("" + info);
+        for (Task taskItem : tasks) {
+            int id = taskItem.getTaskId();
+            String title = taskItem.getTaskTitle();
+            String description = taskItem.getTaskDescription();
+            int reminderId = taskItem.getReminderId();
+            Date dueDate = taskItem.getDueDate();
+            int priority = taskItem.getPriority();
+            boolean solved = taskItem.getTaskState();
         }
 
         //TODO: filter for activated tasks, "delete" solved tasks
@@ -121,9 +115,14 @@ public class MainActivity extends AppCompatActivity
         swipeController = new SwipeController(new SwipeControllerActions() {
             @Override
             public void onRightClicked(int position) {
+
+                Task task = recyclerListAdapter.tasks.get(position);
+                taskDatabase.daoAccess().deleteTask(task);
+
                 recyclerListAdapter.tasks.remove(position);
                 recyclerListAdapter.notifyItemRemoved(position);
                 recyclerListAdapter.notifyItemRangeChanged(position, recyclerListAdapter.getItemCount());
+
             }
         });
         itemTouchHelper = new ItemTouchHelper(swipeController);
