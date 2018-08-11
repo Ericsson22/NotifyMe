@@ -6,19 +6,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
-class RecyclerListAdapter extends RecyclerView.Adapter<RecyclerListAdapter.PlayerViewHolder> {
+class RecyclerListAdapter extends RecyclerView.Adapter<RecyclerListAdapter.TaskViewHolder> {
     List<Task> tasks;
 
-    public class PlayerViewHolder extends RecyclerView.ViewHolder {
+    public class TaskViewHolder extends RecyclerView.ViewHolder {
         private TextView title, date, description, rating, taskID;
 
-        public PlayerViewHolder(View view) {
+        public TaskViewHolder(View view) {
             super(view);
             title = (TextView) view.findViewById(R.id.title);
             date = (TextView) view.findViewById(R.id.date);
@@ -33,15 +32,15 @@ class RecyclerListAdapter extends RecyclerView.Adapter<RecyclerListAdapter.Playe
     }
 
     @Override
-    public PlayerViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public TaskViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.task_row, parent, false);
 
-        return new PlayerViewHolder(itemView);
+        return new TaskViewHolder(itemView);
     }
 
     @Override
-    public void onBindViewHolder(PlayerViewHolder holder, int position) {
+    public void onBindViewHolder(TaskViewHolder holder, int position) {
         Task task = tasks.get(position);
         holder.title.setText(task.getTaskTitle());
         holder.date.setText(task.getTaskDescription());
@@ -52,10 +51,11 @@ class RecyclerListAdapter extends RecyclerView.Adapter<RecyclerListAdapter.Playe
 
         holder.description.setText(strDate + " Uhr");
         holder.taskID.setText("TaskID: " + task.getTaskId());
-    }
 
+    }
     @Override
     public int getItemCount() {
         return tasks.size();
     }
+
 }

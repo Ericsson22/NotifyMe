@@ -18,6 +18,8 @@ import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
+
 import java.util.Date;
 import java.util.List;
 
@@ -25,7 +27,7 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private Toolbar toolbar;
-    private FloatingActionButton fab;
+    private FloatingActionButton floatingActionButton;
     private DrawerLayout drawer;
     private ActionBarDrawerToggle toggle;
     private NavigationView navigationView;
@@ -47,12 +49,10 @@ public class MainActivity extends AppCompatActivity
         initDB();
         initAdapter();
         initItemTouchHelper();
-
-        //TODO: initiate adapter (array adapter enough? or custom adapter?)
     }
 
     private void setupUI() {
-        fab = findViewById(R.id.floating_add_button);
+        floatingActionButton = findViewById(R.id.floating_add_button);
         navigationView = findViewById(R.id.nav_view);
 
         toolbar = findViewById(R.id.toolbar);
@@ -67,7 +67,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void initListeners() {
-        fab.setOnClickListener(new View.OnClickListener() {
+        floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 //when button is pressed, you change activities to add a new entry
@@ -93,7 +93,7 @@ public class MainActivity extends AppCompatActivity
 
     private void initDB() {
         taskDatabase = Room.databaseBuilder(getApplicationContext(), TaskDatabase.class,
-                Constants.DATABASE_NAME).allowMainThreadQueries().build();
+                Constants.DATABASE_NAME).allowMainThreadQueries().fallbackToDestructiveMigration().build();
         tasks = taskDatabase.daoAccess().getTasks();
 
         String info = "";
@@ -122,7 +122,17 @@ public class MainActivity extends AppCompatActivity
                 recyclerListAdapter.tasks.remove(position);
                 recyclerListAdapter.notifyItemRemoved(position);
                 recyclerListAdapter.notifyItemRangeChanged(position, recyclerListAdapter.getItemCount());
+            }
 
+            @Override
+            public void onLeftClicked(int position) {
+                Task task = recyclerListAdapter.tasks.get(position);
+                // Open EDIT / ADD FRAGMENT with current values
+                // EDIT TEXTS for value change
+                // get changed value
+                // save changed value in database
+                //taskDatabase.daoAccess().editTask(task);
+                // recyclerListAdapter.notifyDataSetChanged();
             }
         });
         itemTouchHelper = new ItemTouchHelper(swipeController);
@@ -134,6 +144,8 @@ public class MainActivity extends AppCompatActivity
             }
         });
     }
+
+
 
     @Override
     public void onBackPressed() {
