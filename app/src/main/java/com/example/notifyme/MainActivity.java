@@ -18,7 +18,9 @@ import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
+
+import com.example.notifyme.database.Task;
+import com.example.notifyme.database.TaskDatabase;
 
 import java.util.Date;
 import java.util.List;

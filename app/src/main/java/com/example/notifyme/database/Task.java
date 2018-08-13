@@ -1,9 +1,11 @@
-package com.example.notifyme;
+package com.example.notifyme.database;
 
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
+
+import com.example.notifyme.Constants;
 
 import java.util.Date;
 
