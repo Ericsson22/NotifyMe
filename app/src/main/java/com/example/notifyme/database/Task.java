@@ -23,8 +23,7 @@ public class Task {
     @ColumnInfo(name = "Beschreibung")
     private String taskDescription;
 
-    //spinner gives back an id; e.g. 1 for "1 hour before", 2 for "24 hours before" etc.
-    //spinner or date? delete if necessary
+    //spinner gives back an id; e.g. 0 for "Keine", 1 for "zum Ereigniszeitpunkt" etc.
     @ColumnInfo(name = "ErinnerungsID")
     private int reminderId;
 
@@ -40,11 +39,13 @@ public class Task {
     @ColumnInfo(name = "Abgeschlossen")
     private boolean solved;
 
+
     public Task(){
 
     }
 
-    public void setTaskId(@NonNull int taskId) {
+    //setter methods
+    public void setTaskId(int taskId) {
         this.taskId = taskId;
     }
 
@@ -56,29 +57,25 @@ public class Task {
         this.taskDescription = taskDescription;
     }
 
-    public void setReminderId(@NonNull int reminderId){
-        this.reminderId = reminderId;
+    public void setDueDate(Date dueDate) {
+        this.dueDate = dueDate;
     }
 
-    public void setTaskFinished(Date dueDate) {
-        this.dueDate = dueDate;
+    public void setReminderId(int reminderId){
+        this.reminderId = reminderId;
     }
 
     public void setPriority(int priority) {
         this.priority = priority;
     }
 
-    public void setTaskState(@NonNull boolean solved){
+    public void setSolved(boolean solved) {
         this.solved = solved;
     }
 
-    @NonNull
+    //getter methods
     public int getTaskId() {
         return taskId;
-    }
-
-    public boolean isSolved() {
-        return solved;
     }
 
     public String getTaskTitle(){
@@ -89,31 +86,24 @@ public class Task {
         return taskDescription;
     }
 
-    public int getReminderId(){
-        return reminderId;
-    }
-
     public Date getDueDate() {
         return dueDate;
+    }
+
+    public int getReminderId(){
+        return reminderId;
     }
 
     public int getPriority() {
         return priority;
     }
 
-    public boolean getTaskState(){
+    public boolean isSolved() {
         return solved;
     }
 
-    public void setDueDate(Date dueDate) {
-        this.dueDate = dueDate;
-    }
 
-    public void setSolved(boolean solved) {
-        this.solved = solved;
-    }
-
-/*public Task(int taskId, String taskTitle, String taskDescription, int reminderId, Date taskFinished, int priority, boolean solved){
+    /*public Task(int taskId, String taskTitle, String taskDescription, int reminderId, Date taskFinished, int priority, boolean solved){
         this.taskId = taskId;
         this.taskTitle = taskTitle;
         this.taskDescription = taskDescription;
@@ -121,9 +111,7 @@ public class Task {
         this.taskFinished = taskFinished;
         this.priority = priority;
         this.solved = solved;
-
         //addEntryInDatabase(this)?;
     }*/
-
 
 }

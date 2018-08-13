@@ -1,9 +1,11 @@
 package com.example.notifyme;
 
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.arch.persistence.room.Room;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
@@ -33,7 +35,6 @@ public class AddActivity extends AppCompatActivity {
 
     private TaskDatabase taskDatabase;
 
-    private Spinner reminderSpinner, prioritySpinner;
     private Button saveButton, datePickerButton, timePickerButton;
     private EditText titleInput, descriptionInput;
 
@@ -56,10 +57,24 @@ public class AddActivity extends AppCompatActivity {
         setContentView(R.layout.activity_add);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         setupUI();
-        //TODO: find mistake, stop app from crashing as soon as clicked on the floating add button
-        //when both methods are commented, app doesn't crash --> mistake must be with database
         initDB();
         initListener();
+    }
+
+    @Override
+    public void onBackPressed(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(AddActivity.this);
+        builder.setMessage(R.string.back_button_warning);
+        builder.setPositiveButton(R.string.back_button_yes, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                AddActivity.super.onBackPressed();
+            }
+        });
+        builder.setNegativeButton(R.string.back_button_no, null);
+
+        AlertDialog saveAlert = builder.create();
+        saveAlert.show();
     }
 
     private void setupUI() {
@@ -67,9 +82,9 @@ public class AddActivity extends AppCompatActivity {
         titleInput = findViewById(R.id.input_title);
         descriptionInput = findViewById(R.id.input_description);
 
-        reminderSpinner = findViewById(R.id.spinner_reminder);
-        prioritySpinner = findViewById(R.id.spinner_prioriy);
+        Spinner reminderSpinner = findViewById(R.id.spinner_reminder);
         initNotificationSpinner(reminderSpinner, R.array.reminder_array);
+        Spinner prioritySpinner = findViewById(R.id.spinner_prioriy);
         initPrioritySpinner(prioritySpinner, R.array.priority_array);
 
         showDatePicker();
@@ -88,6 +103,7 @@ public class AddActivity extends AppCompatActivity {
                 //when button is clicked, the new entry is saved
                 putNotificationDateAndTimeTogether();
                 saveNewEntry();
+                changeBackToMainActivity();
             }
         });
     }
@@ -96,9 +112,11 @@ public class AddActivity extends AppCompatActivity {
         final String title = titleInput.getText().toString();
         final String description = descriptionInput.getText().toString();
         final int reminderId = getReminderId();
-        final Date taskFinished = getNotificationDateAndTime().toDate();
         final int priority = getTaskPriority();
-        final boolean solved = false;
+
+        LocalDateTime localDueDate = getNotificationDateAndTime();
+        final Date dueDate = localDueDate.toDate();
+        final boolean solved = getTaskState(localDueDate);
 
         new Thread(new Runnable() {
             @Override
@@ -108,21 +126,22 @@ public class AddActivity extends AppCompatActivity {
                 newTask.setTaskTitle(title);
                 newTask.setTaskDescription(description);
                 newTask.setReminderId(reminderId);
-                newTask.setTaskFinished(taskFinished);
+                newTask.setDueDate(dueDate);
                 newTask.setPriority(priority);
-                newTask.setTaskState(solved);
+                newTask.setSolved(solved);
 
                 //add new task in database
                 taskDatabase.daoAccess().insertTask(newTask);
-
-                //when finished saving, change back to main activity
-                Intent intent = new Intent(AddActivity.this, MainActivity.class);
-                startActivity(intent);
-
-                //TODO: notifyDataSetChanged when an adapter is initialised
             }
         }).start();
+    }
 
+    private void changeBackToMainActivity(){
+        //when finished saving, change back to main activity
+        Intent intent = new Intent(AddActivity.this, MainActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.putExtra("EXIT", true);
+        startActivity(intent);
     }
 
     @Override
@@ -146,7 +165,6 @@ public class AddActivity extends AppCompatActivity {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
 
-        //TODO: initiate spinner (or the alternative)
         // Benötigten Listener Implementieren und die Methoden überschreiben
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
@@ -181,7 +199,7 @@ public class AddActivity extends AppCompatActivity {
 
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
-                setTaskPriority(4);
+                setTaskPriority(0);
             }
         });
     }
@@ -204,7 +222,7 @@ public class AddActivity extends AppCompatActivity {
             LocalDate notificationDate = new LocalDate(year, month, dayOfMonth);
             setNotificationDate(notificationDate);
             DecimalFormat df = new DecimalFormat("00");
-            datePickerButton.setText("" + df.format(year) + "." + df.format(month + 1) + "." + dayOfMonth);
+            datePickerButton.setText("" + df.format(dayOfMonth) + "." + df.format(month + 1)+ "." + df.format(year) );
         }
     };
 
@@ -222,11 +240,10 @@ public class AddActivity extends AppCompatActivity {
     private void putNotificationDateAndTimeTogether() {
         notificationTime = getNotificationTime();
         notificationDate = getNotificationDate();
-        notificationDateAndTime = new LocalDateTime(notificationDate.getYear(), notificationDate.getMonthOfYear() +1,
+        notificationDateAndTime = new LocalDateTime(notificationDate.getYear(), notificationDate.getMonthOfYear() + 1,
                 notificationDate.getDayOfMonth(), notificationTime.getHourOfDay(), notificationTime.getMinuteOfHour());
         setNotificationDateAndTime(notificationDateAndTime);
     }
-
 
 
     public void showTimePicker() {
@@ -244,17 +261,17 @@ public class AddActivity extends AppCompatActivity {
     //Gemeinsames Abrufen von TimePickern und DatePickern
     @Override
     protected Dialog onCreateDialog(int id) {
-            LocalDateTime currentDate = new LocalDateTime(LocalDateTime.now());
-            int datePickerYear = currentDate.getYear();
-            int datePickerMonth = currentDate.getMonthOfYear();
-            int datePickerDay = currentDate.getDayOfMonth();
+        LocalDateTime currentDate = new LocalDateTime(LocalDateTime.now());
+        int datePickerYear = currentDate.getYear();
+        int datePickerMonth = currentDate.getMonthOfYear();
+        int datePickerDay = currentDate.getDayOfMonth();
 
         switch (id) {
             case DIALOG_ID_TIME: {
                 return new TimePickerDialog(this, timePickerListener, timePickerHour, timePickerMinute, true);
             }
             case DIALOG_ID_DATE: {
-                return new DatePickerDialog(this, datePickerListener, datePickerYear, datePickerMonth -1, datePickerDay);
+                return new DatePickerDialog(this, datePickerListener, datePickerYear, datePickerMonth - 1, datePickerDay);
             }
         }
         return null;
@@ -298,5 +315,19 @@ public class AddActivity extends AppCompatActivity {
 
     public void setReminderId(int reminderId) {
         this.reminderId = reminderId;
+    }
+
+    public boolean getTaskState(LocalDateTime taskFinished) {
+        LocalDateTime currentDate = new LocalDateTime(LocalDateTime.now());
+        //if year is the same and day of year is in the future, task isn't solved
+        if((taskFinished.getYear() == currentDate.getYear()) &&
+                (taskFinished.getDayOfYear() > currentDate.getDayOfYear())){
+            return false;
+        } //if year is in the future, task isn't solved either
+        else if (taskFinished.getYear() > currentDate.getYear()){
+            return false;
+        }
+        //if date is in the past, task is solved
+        return true;
     }
 }

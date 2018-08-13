@@ -17,14 +17,17 @@ import java.util.List;
 class RecyclerListAdapter extends RecyclerView.Adapter<RecyclerListAdapter.TaskViewHolder> {
     List<Task> tasks;
 
+    private View itemView;
+
     public class TaskViewHolder extends RecyclerView.ViewHolder {
-        private TextView title, date, description, rating, taskID;
+        private TextView title, date, description, priority, taskID;
 
         public TaskViewHolder(View view) {
             super(view);
             title = (TextView) view.findViewById(R.id.title);
             date = (TextView) view.findViewById(R.id.date);
             description = (TextView) view.findViewById(R.id.description);
+            //priority = (TextView) view.findViewById(R.id.priority);
             taskID = (TextView) view.findViewById(R.id.taskID);
         }
     }
@@ -35,7 +38,7 @@ class RecyclerListAdapter extends RecyclerView.Adapter<RecyclerListAdapter.TaskV
 
     @Override
     public TaskViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View itemView = LayoutInflater.from(parent.getContext())
+        itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.task_row, parent, false);
 
         return new TaskViewHolder(itemView);
@@ -44,20 +47,39 @@ class RecyclerListAdapter extends RecyclerView.Adapter<RecyclerListAdapter.TaskV
     @Override
     public void onBindViewHolder(TaskViewHolder holder, int position) {
         Task task = tasks.get(position);
+
+        int priority = task.getPriority();
+        itemView.setBackgroundResource(getColorForPriority(priority));
         holder.title.setText(task.getTaskTitle());
-        holder.date.setText(task.getTaskDescription());
+        holder.description.setText(task.getTaskDescription());
 
         Date dueDate = task.getDueDate();
         DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy, HH:mm");
         String strDate = dateFormat.format(dueDate);
 
-        holder.description.setText(strDate + " Uhr");
+        holder.date.setText(strDate + " Uhr");
         holder.taskID.setText("TaskID: " + task.getTaskId());
 
     }
+
     @Override
     public int getItemCount() {
         return tasks.size();
+    }
+
+    //no idea where to put this yet
+    private int getColorForPriority(int priority) {
+        if (priority == 0) {
+            return android.R.color.holo_red_light;
+        } else if (priority == 1) {
+            return android.R.color.holo_orange_dark;
+        } else if (priority == 2) {
+            return android.R.color.holo_orange_light;
+        } else if (priority == 3) {
+            return android.R.color.white;
+        } else {
+            return android.R.color.darker_gray;
+        }
     }
 
 }
