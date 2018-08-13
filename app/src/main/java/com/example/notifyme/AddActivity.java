@@ -18,6 +18,9 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TimePicker;
 
+import com.example.notifyme.database.Task;
+import com.example.notifyme.database.TaskDatabase;
+
 import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
 import org.joda.time.LocalTime;

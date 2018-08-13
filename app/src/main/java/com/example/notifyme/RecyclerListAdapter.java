@@ -6,6 +6,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import com.example.notifyme.database.Task;
+
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
