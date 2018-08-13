@@ -22,7 +22,6 @@ class RecyclerListAdapter extends RecyclerView.Adapter<RecyclerListAdapter.TaskV
             title = (TextView) view.findViewById(R.id.title);
             date = (TextView) view.findViewById(R.id.date);
             description = (TextView) view.findViewById(R.id.description);
-            //rating = (TextView) view.findViewById(R.id.rating);
             taskID = (TextView) view.findViewById(R.id.taskID);
         }
     }
