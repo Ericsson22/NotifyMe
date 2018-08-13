@@ -1,15 +1,18 @@
 package com.example.notifyme;
 
 import android.arch.persistence.room.Room;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Canvas;
 import android.os.Bundle;
+import android.preference.DialogPreference;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -18,7 +21,9 @@ import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
+
+import com.example.notifyme.database.Task;
+import com.example.notifyme.database.TaskDatabase;
 
 import java.util.Date;
 import java.util.List;
@@ -63,7 +68,7 @@ public class MainActivity extends AppCompatActivity
                 R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         toggle.syncState();
 
-        recyclerView = (RecyclerView) findViewById(R.id.recycle_list_View);
+        recyclerView = findViewById(R.id.recycle_list_View);
     }
 
     private void initListeners() {
@@ -84,19 +89,14 @@ public class MainActivity extends AppCompatActivity
         startActivity(addIntent);
     }
 
-    private void initAdapter() {
-        recyclerListAdapter = new RecyclerListAdapter(tasks);
-
-        recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
-        recyclerView.setAdapter(recyclerListAdapter);
-    }
-
     private void initDB() {
+        //builds the database
         taskDatabase = Room.databaseBuilder(getApplicationContext(), TaskDatabase.class,
                 Constants.DATABASE_NAME).allowMainThreadQueries().fallbackToDestructiveMigration().build();
+        //saves an array list of tasks out of its database entries
         tasks = taskDatabase.daoAccess().getTasks();
 
-        String info = "";
+        /*String info = "";
 
         for (Task taskItem : tasks) {
             int id = taskItem.getTaskId();
@@ -105,25 +105,54 @@ public class MainActivity extends AppCompatActivity
             int reminderId = taskItem.getReminderId();
             Date dueDate = taskItem.getDueDate();
             int priority = taskItem.getPriority();
-            boolean solved = taskItem.getTaskState();
-        }
+            boolean solved = taskItem.isSolved();
+        }*/
+    }
+
+    private void initAdapter() {
+        //creates new adapter with the database task array list
+        recyclerListAdapter = new RecyclerListAdapter(tasks);
+
+        recyclerView.setLayoutManager(new LinearLayoutManager(this,
+                LinearLayoutManager.VERTICAL, false));
+        //connect adapter with list view
+        recyclerView.setAdapter(recyclerListAdapter);
 
         //TODO: filter for activated tasks, "delete" solved tasks
     }
 
     private void initItemTouchHelper() {
         swipeController = new SwipeController(new SwipeControllerActions() {
+
+            //delete button
             @Override
-            public void onRightClicked(int position) {
+            public void onRightClicked(final int position) {
+                //builds a "Do you really want to delete?" dialog
+                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                builder.setMessage(R.string.delete_check_text);
+                builder.setPositiveButton(R.string.delete_button_text, new DialogInterface.OnClickListener() {
+                    //if delete button is pressed, it deletes the task
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        //finds task in database and deletes it
+                        Task task = recyclerListAdapter.tasks.get(position);
+                        //deletes entry from database
+                        taskDatabase.daoAccess().deleteTask(task);
 
-                Task task = recyclerListAdapter.tasks.get(position);
-                taskDatabase.daoAccess().deleteTask(task);
+                        //updates adapter and removes entry from list view
+                        recyclerListAdapter.tasks.remove(position);
+                        recyclerListAdapter.notifyItemRemoved(position);
+                        recyclerListAdapter.notifyItemRangeChanged(position, recyclerListAdapter.getItemCount());
+                    }
+                });
+                //if cancel button is pressed, it doesn't do anything
+                builder.setNegativeButton(R.string.delete_button_cancel, null);
 
-                recyclerListAdapter.tasks.remove(position);
-                recyclerListAdapter.notifyItemRemoved(position);
-                recyclerListAdapter.notifyItemRangeChanged(position, recyclerListAdapter.getItemCount());
+                AlertDialog deleteAlert = builder.create();
+                deleteAlert.show();
             }
 
+            //edit button
             @Override
             public void onLeftClicked(int position) {
                 Task task = recyclerListAdapter.tasks.get(position);
@@ -131,7 +160,7 @@ public class MainActivity extends AppCompatActivity
                 // EDIT TEXTS for value change
                 // get changed value
                 // save changed value in database
-                //taskDatabase.daoAccess().editTask(task);
+                // taskDatabase.daoAccess().editTask(task);
                 // recyclerListAdapter.notifyDataSetChanged();
             }
         });
@@ -145,23 +174,23 @@ public class MainActivity extends AppCompatActivity
         });
     }
 
-
-
     @Override
     public void onBackPressed() {
         //if back button is pressed while drawer is open, the drawer is closed
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
-        } //if not, it changes to the last activity
+        }
         else {
-            //TODO: maybe add an automatic saving function when a task title exists (here?)
-            super.onBackPressed();
+            //main activity is the first activity, when back is pressed, the app should close
+            if(getIntent().getBooleanExtra("EXIT", false)){
+                finish();
+            }
         }
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present
+        // Inflates the menu, adds items to the action bar if it is present
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }

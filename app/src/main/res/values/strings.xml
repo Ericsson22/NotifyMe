@@ -16,6 +16,12 @@
     <string name="time_picker_text">Zeit</string>
     <string name="priority_title">Priorität</string>
     <string name="headline_time_date_input">Wann endet das Ereignis oder wann findet es statt?</string>
+    <string name="delete_check_text">Wollen Sie diesen Eintrag wirklich löschen?</string>
+    <string name="delete_button_text">Löschen</string>
+    <string name="delete_button_cancel">Abbrechen</string>
+    <string name="back_button_warning">Wollen Sie wirklich zurück? Der neue Eintrag wird nicht gespeichert.</string>
+    <string name="back_button_yes">Ja, ich möchte zurück</string>
+    <string name="back_button_no">Abbrechen</string>
 
     <string-array name="reminder_array">
         <item>keine</item>
