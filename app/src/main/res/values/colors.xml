@@ -3,5 +3,9 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+<<<<<<< HEAD
     <color name="colorFragment">#FFFFF0</color>
+=======
+    <color name="colorFragment">#dfe6e9</color>
+>>>>>>> a4a0baf2972e4701fbb791600d0ed938e47df35f
 </resources>

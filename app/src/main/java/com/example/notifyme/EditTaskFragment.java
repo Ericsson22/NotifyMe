@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+<<<<<<< HEAD
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -20,6 +21,15 @@ public class EditTaskFragment extends Fragment implements View.OnClickListener {
 
     private Button editSaveButton;
     public static FragmentManager fragmentManager;
+=======
+
+import static com.example.notifyme.MainActivity.fragmentManager;
+
+public class EditTaskFragment extends Fragment {
+
+    private Button editSaveButton;
+
+>>>>>>> a4a0baf2972e4701fbb791600d0ed938e47df35f
 
 
     public EditTaskFragment() {
@@ -31,6 +41,7 @@ public class EditTaskFragment extends Fragment implements View.OnClickListener {
     public  View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
         View view = inflater.inflate(R.layout.fragment_edit_task, container, false);
 
+<<<<<<< HEAD
             //das schließen und das darauffolgende aufploppen der Main funktioniert irgendwie noch nicht
         editSaveButton = (Button) view.findViewById(R.id.save_edit_button);
         editSaveButton.setOnClickListener(this);
@@ -105,3 +116,20 @@ public class EditTaskFragment extends Fragment implements View.OnClickListener {
 
 
 
+=======
+        editSaveButton=view.findViewById(R.id.save_edit_button);
+        editSaveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MainActivity.fragmentManager.beginTransaction().remove(EditTaskFragment.this).commit();
+
+                //das schließen und das darauffolgende aufploppen der Main funktioniert irgendwie noch nicht
+            }
+        });
+
+        return view;
+    }
+
+
+}
+>>>>>>> a4a0baf2972e4701fbb791600d0ed938e47df35f

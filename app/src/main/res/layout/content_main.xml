@@ -17,6 +17,12 @@
             >
 
 
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/fragment_container">
+
+
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -31,10 +37,15 @@
             android:orientation="horizontal"
             android:clipToPadding="false"
             android:overScrollMode="never" />
+<<<<<<< HEAD
 
 
     </RelativeLayout>
 
+=======
+
+    </RelativeLayout>
+>>>>>>> a4a0baf2972e4701fbb791600d0ed938e47df35f
     </FrameLayout>
 
 </android.support.constraint.ConstraintLayout>

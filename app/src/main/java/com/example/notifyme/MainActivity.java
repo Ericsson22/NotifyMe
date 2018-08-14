@@ -232,10 +232,14 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
+<<<<<<< HEAD
     @Override
     protected void onDestroy(){
         fragmentManager.isDestroyed();
         super.onDestroy();
+=======
+
+>>>>>>> a4a0baf2972e4701fbb791600d0ed938e47df35f
 }
 
     }
