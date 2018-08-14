@@ -1,6 +1,7 @@
 package com.example.notifyme;
 
 import android.arch.persistence.room.Dao;
+import android.arch.persistence.room.Delete;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.Query;
 
@@ -13,4 +14,7 @@ public interface DaoAccess {
 
     @Query("select * from " + Constants.DATABASE_NAME)
     public List<Task> getTasks();
+
+    @Delete
+    public void deleteTask(Task task);
 }

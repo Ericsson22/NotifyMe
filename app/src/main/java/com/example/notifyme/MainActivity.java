@@ -1,20 +1,29 @@
 package com.example.notifyme;
 
+
 import android.arch.persistence.room.Room;
 import android.content.Intent;
+import android.graphics.Canvas;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
-import android.view.View;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.NavUtils;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ListView;
+import android.view.View;
+import android.widget.Button;
+import android.widget.Toast;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 
 import java.util.Date;
 import java.util.List;
@@ -23,14 +32,21 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private Toolbar toolbar;
-    private FloatingActionButton fab;
+    private FloatingActionButton floatingActionButton;
     private DrawerLayout drawer;
     private ActionBarDrawerToggle toggle;
     private NavigationView navigationView;
-
-    private ListTaskAdapter listTaskAdapter;
-    private ListView taskList;
+    private RecyclerListAdapter recyclerListAdapter;
     private TaskDatabase taskDatabase;
+    List<Task> tasks;
+
+    public static FragmentManager fragmentManager;
+
+    private Button editSaveButton;
+
+    RecyclerView recyclerView;
+    private SwipeController swipeController;
+    private ItemTouchHelper itemTouchHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,18 +55,15 @@ public class MainActivity extends AppCompatActivity
 
         setupUI();
         initListeners();
-        initAdapter();
-        /*
         initDB();
-        doesn't work right now; when uncommented, app crashes */
+        initAdapter();
+        initItemTouchHelper();
 
-        //TODO: initiate adapter (array adapter enough? or custom adapter?)
     }
 
     private void setupUI() {
-        fab = findViewById(R.id.floating_add_button);
+        floatingActionButton = findViewById(R.id.floating_add_button);
         navigationView = findViewById(R.id.nav_view);
-        taskList = findViewById(R.id.list_view);
 
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -59,10 +72,12 @@ public class MainActivity extends AppCompatActivity
         toggle = new ActionBarDrawerToggle(this, drawer, toolbar,
                 R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         toggle.syncState();
+
+        recyclerView = (RecyclerView) findViewById(R.id.recycle_list_View);
     }
 
-    private void initListeners(){
-        fab.setOnClickListener(new View.OnClickListener() {
+    private void initListeners() {
+        floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 //when button is pressed, you change activities to add a new entry
@@ -74,37 +89,77 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
     }
 
-    private void changeToAddActivity(){
+    private void changeToAddActivity() {
         Intent addIntent = new Intent(MainActivity.this, AddActivity.class);
         startActivity(addIntent);
     }
 
-    private void initAdapter(){
-        //TODO: add the adapter
+    private void initAdapter() {
+        recyclerListAdapter = new RecyclerListAdapter(tasks);
+
+        recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        recyclerView.setAdapter(recyclerListAdapter);
     }
 
-    private void initDB(){
-        taskDatabase = Room.databaseBuilder(getApplicationContext(),TaskDatabase.class,
-                Constants.DATABASE_NAME).allowMainThreadQueries().build();
-
-        List<Task> tasks = taskDatabase.daoAccess().getTasks();
+    private void initDB() {
+        taskDatabase = Room.databaseBuilder(getApplicationContext(), TaskDatabase.class,
+                Constants.DATABASE_NAME).allowMainThreadQueries().fallbackToDestructiveMigration().build();
+        tasks = taskDatabase.daoAccess().getTasks();
 
         String info = "";
 
-        for(Task task : tasks){
-            int id = task.getTaskId();
-            String title = task.getTaskTitle();
-            String description = task.getTaskDescription();
-            int reminderId = task.getReminderId();
-            Date taskFinished = task.getDueDate();
-            int priority = task.getPriority();
-            boolean solved = task.getTaskState();
-
-            info = "" + id + " " + title + " " + description + " " + reminderId + " " + taskFinished + " " + priority + " " + solved;
+        for (Task taskItem : tasks) {
+            int id = taskItem.getTaskId();
+            String title = taskItem.getTaskTitle();
+            String description = taskItem.getTaskDescription();
+            int reminderId = taskItem.getReminderId();
+            Date dueDate = taskItem.getDueDate();
+            int priority = taskItem.getPriority();
+            boolean solved = taskItem.getTaskState();
         }
 
         //TODO: filter for activated tasks, "delete" solved tasks
     }
+
+    private void initItemTouchHelper() {
+        swipeController = new SwipeController(new SwipeControllerActions() {
+            @Override
+            public void onRightClicked(int position) {
+
+                Task task = recyclerListAdapter.tasks.get(position);
+                taskDatabase.daoAccess().deleteTask(task);
+
+                recyclerListAdapter.tasks.remove(position);
+                recyclerListAdapter.notifyItemRemoved(position);
+                recyclerListAdapter.notifyItemRangeChanged(position, recyclerListAdapter.getItemCount());
+            }
+
+            @Override
+            public void onLeftClicked(int position) {
+                Task task = recyclerListAdapter.tasks.get(position);
+                FragmentManager fragmentManager=getSupportFragmentManager();
+                if(findViewById(R.id.fragment_container)!=null) {
+
+                    final FragmentTransaction fragmentTransaction=fragmentManager.beginTransaction();
+                    final EditTaskFragment editTaskFragment=new EditTaskFragment();
+
+                    fragmentTransaction.isAddToBackStackAllowed();
+                    fragmentTransaction.add(R.id.fragment_container,editTaskFragment, null);
+                    fragmentTransaction.commit();
+                }
+            }
+        });
+        itemTouchHelper = new ItemTouchHelper(swipeController);
+        itemTouchHelper.attachToRecyclerView(recyclerView);
+        recyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
+            @Override
+            public void onDraw(Canvas c, RecyclerView parent, RecyclerView.State state) {
+                swipeController.onDraw(c);
+            }
+        });
+    }
+
+
 
     @Override
     public void onBackPressed() {
@@ -146,7 +201,7 @@ public class MainActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         // Handle navigation view item clicks here.
 
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.nav_settings:
                 Intent settingsIntent = new Intent(MainActivity.this, SettingsActivity.class); //Angabe von derzeitiger Seite und Zielseite
                 startActivity(settingsIntent);
@@ -176,4 +231,13 @@ public class MainActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
+    @Override
+    protected void onDestroy(){
+        fragmentManager.isDestroyed();
+        super.onDestroy();
 }
+
+    }
+
+

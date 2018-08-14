@@ -21,6 +21,7 @@
         </activity>
         <activity android:name=".AddActivity">
             <meta-data
+                android:label="@string/headline_add"
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.notifyme.MainActivity" />
         </activity>
@@ -31,6 +32,7 @@
         </activity>
         <activity android:name=".SolvedTasksActivity">
             <meta-data
+                android:label="@string/headline_solved"
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.notifyme.MainActivity" />
         </activity>
