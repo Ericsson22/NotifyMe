@@ -183,6 +183,8 @@ public class MainActivity extends AppCompatActivity
             //main activity is the first activity, when back is pressed, the app should close
             if(getIntent().getBooleanExtra("EXIT", false)){
                 finish();
+            } else {
+                super.onBackPressed();
             }
         }
     }
