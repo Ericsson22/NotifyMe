@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    tools:context=".EditTaskFragment"
+    android:background="@color/colorFragment"
+    >
+
+
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+
+        <EditText
+            android:id="@+id/edit_input_title"
+            android:inputType="text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:singleLine="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true" />
+
+        <EditText
+            android:id="@+id/edit_input_description"
+            android:layout_below="@id/edit_input_title"
+            android:inputType="text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true" />
+
+        <TextView
+            android:id="@+id/headline_time_date_input"
+            android:layout_below="@id/edit_input_description"
+            android:layout_marginTop="16dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:text="@string/headline_time_date_input"
+            android:textStyle="bold"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/date_picker_text"
+            android:id="@+id/edit_button_date_picker"
+            android:layout_below="@id/headline_time_date_input"
+            />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/headline_time_date_input"
+            android:layout_toRightOf="@id/edit_button_date_picker"
+            android:text="@string/time_picker_text"
+            android:id="@+id/edit_button_time_picker"/>
+
+        <TextView
+            android:id="@+id/headline_spinner_reminder"
+            android:layout_below="@id/edit_button_date_picker"
+            android:layout_marginTop="16dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:text="@string/notification"
+            android:textStyle="bold"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+
+            />
+
+        <Spinner
+            android:id="@+id/edit_spinner_reminder"
+            android:layout_below="@id/headline_spinner_reminder"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            />
+
+
+        <TextView
+            android:id="@+id/headline_spinner_priority"
+            android:layout_below="@+id/edit_spinner_reminder"
+            android:layout_marginTop="16dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:text="@string/priority_title"
+            android:textStyle="bold"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            />
+
+        <Spinner
+            android:id="@+id/edit_spinner_prioriy"
+            android:layout_below="@id/headline_spinner_priority"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            />
+
+        <Button
+            android:id="@+id/save_edit_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:text="@string/change_button_title" />
+
+    </RelativeLayout>
+
+</FrameLayout>

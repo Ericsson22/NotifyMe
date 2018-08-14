@@ -9,6 +9,8 @@ import android.preference.DialogPreference;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -21,12 +23,15 @@ import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 
 import com.example.notifyme.database.Task;
 import com.example.notifyme.database.TaskDatabase;
 
 import java.util.Date;
 import java.util.List;
+
+import static com.example.notifyme.EditTaskFragment.fragmentManager;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -39,6 +44,10 @@ public class MainActivity extends AppCompatActivity
     private RecyclerListAdapter recyclerListAdapter;
     private TaskDatabase taskDatabase;
     List<Task> tasks;
+
+    public static FragmentManager fragmentManager;
+
+    private Button editSaveButton;
 
     RecyclerView recyclerView;
     private SwipeController swipeController;
@@ -161,6 +170,15 @@ public class MainActivity extends AppCompatActivity
                 // save changed value in database
                 // taskDatabase.daoAccess().editTask(task);
                 // recyclerListAdapter.notifyDataSetChanged();
+
+                FragmentManager fragmentManager=getSupportFragmentManager();
+                if(findViewById(R.id.fragment_container)!=null) {
+                    final EditTaskFragment editTaskFragment = new EditTaskFragment();
+
+                    FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction().add(R.id.fragment_container, editTaskFragment, null);
+                    fragmentTransaction.isAddToBackStackAllowed();
+                    fragmentTransaction.commit();
+                }
             }
         });
         itemTouchHelper = new ItemTouchHelper(swipeController);
@@ -183,6 +201,9 @@ public class MainActivity extends AppCompatActivity
             //main activity is the first activity, when back is pressed, the app should close
             if(getIntent().getBooleanExtra("EXIT", false)){
                 finish();
+            }
+            else {
+                super.onBackPressed();
             }
         }
     }
@@ -246,5 +267,10 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
+    @Override
+    protected void onDestroy(){
+        fragmentManager.isDestroyed();
+        super.onDestroy();
+    }
 
 }

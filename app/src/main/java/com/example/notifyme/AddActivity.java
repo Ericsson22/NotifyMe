@@ -117,6 +117,8 @@ public class AddActivity extends AppCompatActivity {
         LocalDateTime localDueDate = getNotificationDateAndTime();
         final Date dueDate = localDueDate.toDate();
         final boolean solved = getTaskState(localDueDate);
+        LocalDateTime localDateTime = new LocalDateTime(dueDate);
+
 
         new Thread(new Runnable() {
             @Override
