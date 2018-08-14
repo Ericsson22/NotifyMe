@@ -177,6 +177,7 @@ public class MainActivity extends AppCompatActivity
                 bundle.putString("descriptionTaskText", "" + task.getTaskDescription());
                 bundle.putInt("reminderInt", task.getReminderId());
                 bundle.putInt("priorityInt", task.getPriority());
+                bundle.putString("dueDateString", "" + task.getDueDate().toString());
 
                 FragmentManager fragmentManager=getSupportFragmentManager();
                 if(findViewById(R.id.fragment_container)!=null) {

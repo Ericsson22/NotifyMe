@@ -20,6 +20,9 @@ import android.widget.Toast;
 import com.example.notifyme.database.Task;
 import com.example.notifyme.database.TaskDatabase;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Objects;
 
@@ -40,6 +43,8 @@ public class EditTaskFragment extends Fragment implements View.OnClickListener {
 
     private int taskId;
 
+    private Date dueDate;
+
 
     public EditTaskFragment() {
 
@@ -55,6 +60,15 @@ public class EditTaskFragment extends Fragment implements View.OnClickListener {
         String descriptionTaskText = getArguments().getString("descriptionTaskText");
         int reminderInt = getArguments().getInt("reminderInt");
         int priorityInt = getArguments().getInt("priorityInt");
+        String dueDateString = getArguments().getString("dueDateString");
+
+       /* SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm");
+        try {
+            dueDate = simpleDateFormat.parse(dueDateString);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }*/
+
 
         //das schließen und das darauffolgende aufploppen der Main funktioniert irgendwie noch nicht
 
@@ -98,8 +112,7 @@ public class EditTaskFragment extends Fragment implements View.OnClickListener {
         task.setTaskDescription(descriptionInput.getText().toString());
         task.setReminderId(getReminderId());
         task.setPriority(getTaskPriority());
-
-       // Date dueDate = task.getDueDate();
+        //task.setDueDate(dueDate);
 
         //boolean solved = task.isSolved();
 
