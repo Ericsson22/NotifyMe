@@ -30,6 +30,9 @@ import org.joda.time.LocalTime;
 import java.text.DecimalFormat;
 import java.util.Date;
 
+import static com.example.notifyme.Constants.HIGHEST_PRIORITY;
+import static com.example.notifyme.Constants.NO_REMINDER;
+
 
 public class AddActivity extends AppCompatActivity {
 
@@ -59,6 +62,7 @@ public class AddActivity extends AppCompatActivity {
         setupUI();
         initDB();
         initListener();
+        initService();
     }
 
     @Override
@@ -83,7 +87,7 @@ public class AddActivity extends AppCompatActivity {
         descriptionInput = findViewById(R.id.input_description);
 
         Spinner reminderSpinner = findViewById(R.id.spinner_reminder);
-        initNotificationSpinner(reminderSpinner, R.array.reminder_array);
+        initReminderSpinner(reminderSpinner, R.array.reminder_array);
         Spinner prioritySpinner = findViewById(R.id.spinner_prioriy);
         initPrioritySpinner(prioritySpinner, R.array.priority_array);
 
@@ -106,6 +110,10 @@ public class AddActivity extends AppCompatActivity {
                 changeBackToMainActivity();
             }
         });
+    }
+
+    private void initService(){
+
     }
 
     private void saveNewEntry() {
@@ -157,9 +165,9 @@ public class AddActivity extends AppCompatActivity {
         }
     }
 
-    private void initNotificationSpinner(Spinner spinner, int arrayID) {
+    private void initReminderSpinner(Spinner spinner, int arrayID) {
 
-        // Adaptersetup
+        // sets the adapter
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
                 AddActivity.this, arrayID,
                 android.R.layout.simple_spinner_item);
@@ -167,20 +175,20 @@ public class AddActivity extends AppCompatActivity {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
 
-        // Benötigten Listener Implementieren und die Methoden überschreiben
+        // implements listener
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
             @Override
             //hier kommt die weiterverarbeitung der versch. Werte rein
             public void onItemSelected(AdapterView<?> adapterView, View v,
                                        int position, long arg3) {
-                //set the reminderID to the number of list position
+                //sets the reminderID to the number of list position
                 setReminderId(position);
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
-                setReminderId(0);
+                setReminderId(NO_REMINDER);
             }
         });
     }
@@ -201,7 +209,7 @@ public class AddActivity extends AppCompatActivity {
 
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
-                setTaskPriority(0);
+                setTaskPriority(HIGHEST_PRIORITY);
             }
         });
     }

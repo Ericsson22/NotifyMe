@@ -14,6 +14,13 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import static com.example.notifyme.Constants.CASUAL;
+import static com.example.notifyme.Constants.HIGHEST_PRIORITY;
+import static com.example.notifyme.Constants.NOT_AS_URGENT;
+import static com.example.notifyme.Constants.URGENT;
+import static com.example.notifyme.Constants.VERY_URGENT;
+
+
 class RecyclerListAdapter extends RecyclerView.Adapter<RecyclerListAdapter.TaskViewHolder> {
     List<Task> tasks;
 
@@ -69,13 +76,13 @@ class RecyclerListAdapter extends RecyclerView.Adapter<RecyclerListAdapter.TaskV
 
     //no idea where to put this yet
     private int getColorForPriority(int priority) {
-        if (priority == 0) {
+        if (priority == HIGHEST_PRIORITY) {
             return android.R.color.holo_red_light;
-        } else if (priority == 1) {
+        } else if (priority == VERY_URGENT) {
             return android.R.color.holo_orange_dark;
-        } else if (priority == 2) {
+        } else if (priority == URGENT) {
             return android.R.color.holo_orange_light;
-        } else if (priority == 3) {
+        } else if (priority == NOT_AS_URGENT) {
             return android.R.color.white;
         } else {
             return android.R.color.darker_gray;
