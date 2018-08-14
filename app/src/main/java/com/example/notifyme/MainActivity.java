@@ -171,10 +171,17 @@ public class MainActivity extends AppCompatActivity
                 // taskDatabase.daoAccess().editTask(task);
                 // recyclerListAdapter.notifyDataSetChanged();
 
+                Bundle bundle = new Bundle();
+                bundle.putInt("taskId", task.getTaskId());
+                bundle.putString("titleTaskText", "" + task.getTaskTitle());
+                bundle.putString("descriptionTaskText", "" + task.getTaskDescription());
+                bundle.putInt("reminderInt", task.getReminderId());
+                bundle.putInt("priorityInt", task.getPriority());
+
                 FragmentManager fragmentManager=getSupportFragmentManager();
                 if(findViewById(R.id.fragment_container)!=null) {
-                    final EditTaskFragment editTaskFragment = new EditTaskFragment();
-
+                    EditTaskFragment editTaskFragment = new EditTaskFragment();
+                    editTaskFragment.setArguments(bundle);
                     FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction().add(R.id.fragment_container, editTaskFragment, null);
                     fragmentTransaction.isAddToBackStackAllowed();
                     fragmentTransaction.commit();
